@@ -36,7 +36,9 @@ router.get('/users/:id', async (req, res) => {
   const user = await UserModel.findOne({ _id: id }).lean();
 
   if (!user) {
-    res.status(STATUS.INTERNAL_SERVER_ERROR).json({ message: 'Region not found' });
+    res
+      .status(STATUS.INTERNAL_SERVER_ERROR)
+      .json({ message: 'Region not found' });
   }
 
   return user;

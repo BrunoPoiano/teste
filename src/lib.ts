@@ -1,14 +1,18 @@
- import axios from 'axios';
+import axios from 'axios';
 class GeoLib {
   private apiKey: string;
   private geocodingApiUrl: string;
 
   constructor() {
-    this.apiKey = process.env.GEOCODING_API_KEY || 'AIzaSyDy8-PqjlhwfFuG6m4zdQwP9bfAbibUVjw';
+    this.apiKey =
+      process.env.GEOCODING_API_KEY ||
+      'AIzaSyDy8-PqjlhwfFuG6m4zdQwP9bfAbibUVjw';
     this.geocodingApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
   }
 
-  async getAddressFromCoordinates(coordinates: [number, number]): Promise<string> {
+  async getAddressFromCoordinates(
+    coordinates: [number, number]
+  ): Promise<string> {
     try {
       if (!this.apiKey) {
         throw new Error('Geocoding API key not configured');
@@ -18,8 +22,8 @@ class GeoLib {
       const response = await axios.get(this.geocodingApiUrl, {
         params: {
           latlng: `${lat},${lng}`,
-          key: this.apiKey
-        }
+          key: this.apiKey,
+        },
       });
 
       if (response.data.status !== 'OK') {
@@ -39,7 +43,9 @@ class GeoLib {
     }
   }
 
-  async getCoordinatesFromAddress(address: string): Promise<{ lat: number; lng: number }> {
+  async getCoordinatesFromAddress(
+    address: string
+  ): Promise<{ lat: number; lng: number }> {
     try {
       if (!this.apiKey) {
         throw new Error('Geocoding API key not configured');
@@ -48,8 +54,8 @@ class GeoLib {
       const response = await axios.get(this.geocodingApiUrl, {
         params: {
           address: address,
-          key: this.apiKey
-        }
+          key: this.apiKey,
+        },
       });
 
       if (response.data.status !== 'OK') {
