@@ -4,7 +4,7 @@ import * as userController from "../controllers/userController";
 
 router.get("", userController.loggedUser);
 router.put("", userController.updateUser);
-router.delete("", userController.teste);
+router.delete("", userController.deleteUser);
 router.get("/teste", userController.teste);
 
 export default router;

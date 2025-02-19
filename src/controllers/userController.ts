@@ -2,6 +2,7 @@
 import { Request, Response } from "express";
 import databaseInit from "../database";
 import { User, UserModel } from "../models";
+import { expressjwt } from "express-jwt";
 
 export const teste = async (req: Request, resp: Response) => {
   try {
@@ -11,7 +12,7 @@ export const teste = async (req: Request, resp: Response) => {
       name: "John Doe",
       email: "johndoe@example.com",
       address: "1600 Amphitheatre Parkway, Mountain View, CA",
-      coordinates: [-122.084, 37.422], // Example coordinates
+      coordinates: [-122.084, 37.422],
     });
 
     console.log("user added", newUser);
@@ -45,6 +46,21 @@ export const updateUser = async (req: Request, resp: Response) => {
   }
 };
 
+export const deleteUser = async (req: Request, resp: Response) => {
+  try {
+    const user = req?.user
+    if (!user) {
+      return resp.status(401).json({ error: "User not found" });
+    }
+
+    await UserModel.deleteOne({ _id: user._id });
+
+    return resp.status(200).json({ message: "User deleted" });
+  } catch (err) {
+    console.error(err);
+    return resp.status(500).json( err );
+  }
+};
 
 export const loggedUser = async (req: Request, resp: Response) => {
   try {
@@ -52,7 +68,6 @@ export const loggedUser = async (req: Request, resp: Response) => {
     if (!user) {
       return resp.status(401).json({ error: "User not found" });
     }
-
     return resp.status(200).json(user);
   } catch (err) {
     console.error(err);
