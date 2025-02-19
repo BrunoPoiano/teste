@@ -6,8 +6,8 @@ import bcrypt from "bcryptjs";
 import { User } from "./models";
 
 const jwtConfig = {
-	secret: process.env.JWT_SECRET || "WA3B9jrGrcJV0CWWjNPXSSYnKyNszdrYNKcRJC1QpjW7w8G8pwv7q97WBc9",
-	expiresIn: "24h",
+	secret: String(process.env.JWT_SECRET || "WA3B9jrGrcJV0CWWjNPXSSYnKyNszdrYNKcRJC1QpjW7w8G8pwv7q97WBc9"),
+	expiresIn: 86400,
 };
 
 export const authMiddleware = expressjwt({
@@ -37,11 +37,8 @@ export const hashPassword = async (password: string): Promise<string> => {
 
 export const generateToken = (user: User) => {
     return jwt.sign(
-        {
-            id: user._id,
-            email: user.email,
-        },
-        jwtConfig.secret,
-        { expiresIn: jwtConfig.expiresIn },
+      { id: user._id, email: user.email },
+              jwtConfig.secret as string,
+              { expiresIn: jwtConfig.expiresIn }
     );
 };
