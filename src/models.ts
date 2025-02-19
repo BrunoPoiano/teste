@@ -74,6 +74,13 @@ export class Region extends Base {
 
   @Prop({ ref: () => User, required: true, type: () => String })
   user: Ref<User>;
+
+  @Prop({
+    type: mongoose.Schema.Types.Mixed,
+    coordinates: [[[Number]]],
+    required: true,
+  })
+  geojson!: { type: 'Polygon'; coordinates: number[][][] };
 }
 
 export const UserModel = getModelForClass(User);

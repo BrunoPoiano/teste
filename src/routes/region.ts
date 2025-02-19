@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-import * as userController from '../controllers/userController';
+import * as regionController from '../controllers/regionController';
 
-router.get('', userController.loggedUser);
-router.put('', userController.updateUser);
-router.delete('', userController.deleteUser);
-router.get('/teste-user', userController.createTesteUser);
+router.get('', regionController.getRegion);
+router.post('', regionController.createRegion);
+router.put('/:id', regionController.updateRegion);
+router.delete('/:id', regionController.deleteRegion);
 
 export default router;
