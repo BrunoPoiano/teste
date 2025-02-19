@@ -7,6 +7,7 @@ import {
   Prop,
   Ref,
   modelOptions,
+  Index,
 } from '@typegoose/typegoose';
 import lib from './lib';
 
@@ -68,6 +69,7 @@ export class User extends Base {
   }
 })
 @modelOptions({ schemaOptions: { validateBeforeSave: false } })
+@Index({ geojson: '2dsphere' })
 export class Region extends Base {
   @Prop({ required: true })
   name!: string;

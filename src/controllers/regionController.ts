@@ -1,6 +1,7 @@
 /// <reference path="../types/express.d.ts" />
 import { Request, Response } from 'express';
 import { Region, RegionModel } from '../models';
+import { Query } from 'mongoose';
 
 export const getRegion = async (req: Request, resp: Response) => {
   try {
@@ -83,6 +84,11 @@ export const deleteRegion = async (req: Request, resp: Response) => {
 export const findRegion = async (req: Request, resp: Response) => {
 
   try{
+    const user = req?.user;
+    if (!user) {
+      return resp.status(401).json({ error: 'User not found' });
+    }
+
     const latitude = req.body.latitude
     const longitude = req.body.longitude
 
@@ -91,14 +97,15 @@ export const findRegion = async (req: Request, resp: Response) => {
     }
 
     const regions = await RegionModel.find({
-      geojson : {
+      geojson: {
         $geoIntersects:{
           $geometry:{
             type:"Point",
-            coordinates:[parseFloat(latitude),parseFloat(longitude)]
+            coordinates:[Number.parseFloat(latitude),Number.parseFloat(longitude)]
           }
         }
-      }
+      },
+      user: user._id
     }).lean()
 
     resp.status(200).json({regions:regions})
@@ -112,9 +119,15 @@ export const findRegion = async (req: Request, resp: Response) => {
 export const findRegionNear = async (req:Request, resp:Response)=>{
 
   try{
+
+    const user = req?.user;
+    if (!user) {
+      return resp.status(401).json({ error: 'User not found' });
+    }
+
     const latitude = req.body.latitude
     const longitude = req.body.longitude
-    const distance = req.body.distance
+    const distance = req.body.distance || 1000
 
     if( !latitude || !longitude){
       return resp.status(500).json({message: "missing arguments"})
@@ -124,12 +137,13 @@ export const findRegionNear = async (req:Request, resp:Response)=>{
         $geoNear:{
           near:{
             type:"Point",
-            coordinates:[parseFloat(latitude),parseFloat(longitude)]
+            coordinates:[Number.parseFloat(latitude),Number.parseFloat(longitude)]
           },
           maxDistance: distance,
           spherical:true,
           distanceField:"distance",
-          includeLocs:"locations"
+          includeLocs:"locations",
+          query: {user: user._id}
         }
     }])
 
