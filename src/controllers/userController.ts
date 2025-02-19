@@ -1,3 +1,4 @@
+/// <reference path="../types/express.d.ts" />
 import { Request, Response } from "express";
 import databaseInit from "../database";
 import { UserModel } from "../models";

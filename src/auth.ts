@@ -32,21 +32,15 @@ export const userMiddleware = async (
         if (!req.user) {
             return next();
         }
-
         await databaseInit();
-
-        // 🔍 Buscar usuário pelo `_id`
-        const user = await UserModel.findById(req.user._id).lean();
-
+        const user = await UserModel.findOne({id: req.user._id}).lean();
         if (!user) {
             return res.status(401).json({ message: "User not found" });
         }
-
         req.user = user;
-
         next();
     } catch (error) {
-        console.error("❌ Error in userMiddleware:", error);
+        console.error("Error userMiddleware", error);
         next(error);
     }
 };
