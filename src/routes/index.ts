@@ -6,5 +6,6 @@ import { authMiddleware, userMiddleware } from "../auth";
 
 router.use("/user", [authMiddleware, userMiddleware], userRoutes);
 router.get("/login", authController.login);
+router.post("/signin", authController.createUser);
 
 export default router;
