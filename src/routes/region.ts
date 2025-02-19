@@ -6,5 +6,7 @@ router.get('', regionController.getRegion);
 router.post('', regionController.createRegion);
 router.put('/:id', regionController.updateRegion);
 router.delete('/:id', regionController.deleteRegion);
+router.get('/search/', regionController.findRegion)
+router.get('/search_near/', regionController.findRegionNear)
 
 export default router;

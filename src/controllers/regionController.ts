@@ -78,3 +78,65 @@ export const deleteRegion = async (req: Request, resp: Response) => {
     resp.status(500).json({ message: 'Error deleting region', error: error });
   }
 };
+
+
+export const findRegion = async (req: Request, resp: Response) => {
+
+  try{
+    const latitude = req.body.latitude
+    const longitude = req.body.longitude
+
+    if( !latitude || !longitude){
+      return resp.status(500).json({message: "missing arguments"})
+    }
+
+    const regions = await RegionModel.find({
+      geojson : {
+        $geoIntersects:{
+          $geometry:{
+            type:"Point",
+            coordinates:[parseFloat(latitude),parseFloat(longitude)]
+          }
+        }
+      }
+    }).lean()
+
+    resp.status(200).json({regions:regions})
+
+  }catch(error){
+    console.error(error);
+    resp.status(500).json({ message: 'Error finding region', error: error });
+  }
+}
+
+export const findRegionNear = async (req:Request, resp:Response)=>{
+
+  try{
+    const latitude = req.body.latitude
+    const longitude = req.body.longitude
+    const distance = req.body.distance
+
+    if( !latitude || !longitude){
+      return resp.status(500).json({message: "missing arguments"})
+    }
+
+    const regions = await RegionModel.aggregate([{
+        $geoNear:{
+          near:{
+            type:"Point",
+            coordinates:[parseFloat(latitude),parseFloat(longitude)]
+          },
+          maxDistance: distance,
+          spherical:true,
+          distanceField:"distance",
+          includeLocs:"locations"
+        }
+    }])
+
+    resp.status(200).json({regions:regions})
+
+  }catch(error){
+    console.error(error);
+    resp.status(500).json({ message: 'Error finding region', error: error });
+  }
+}
