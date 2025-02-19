@@ -3,8 +3,9 @@ import { Request, Response } from "express";
 import databaseInit from "../database";
 import { User, UserModel } from "../models";
 import { expressjwt } from "express-jwt";
+import lib from "../lib";
 
-export const teste = async (req: Request, resp: Response) => {
+export const createTesteUser = async (req: Request, resp: Response) => {
   try {
     await databaseInit();
 
@@ -30,9 +31,22 @@ export const updateUser = async (req: Request, resp: Response) => {
    if (!user) {
      return resp.status(401).json({ error: "User not found" });
    }
-    const userData: Partial<User> = { name, email };
-        if (address) userData.address = address;
-        if (coordinates) userData.coordinates = coordinates;
+
+
+    if(!coordinates && !address){
+          return resp.status(500).json({ error: "Send a coordinates or address" });
+        }
+        if(coordinates && address){
+          return resp.status(500).json({ error: "Send only coordinates or address" });
+        }
+ const userData: Partial<User> = { name, email };
+        if (!coordinates) {
+          const { lat, lng } = await lib.getCoordinatesFromAddress(address);
+          userData.coordinates = [lng, lat];
+        }
+        if (!address) {
+          userData.address = await lib.getAddressFromCoordinates(coordinates);
+        }
 
         const updatedUser = await UserModel.findOneAndUpdate(
           { _id: user._id },

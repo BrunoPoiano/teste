@@ -4,8 +4,14 @@ import userRoutes from "./user";
 import * as authController from "../controllers/authController"
 import { authMiddleware, userMiddleware } from "../auth";
 
-router.use("/user", [authMiddleware, userMiddleware], userRoutes);
+//Auth
 router.get("/login", authController.login);
 router.post("/signin", authController.createUser);
+
+//user
+router.use("/user", [authMiddleware, userMiddleware], userRoutes);
+
+//region
+
 
 export default router;
