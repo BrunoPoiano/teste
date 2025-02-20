@@ -1,6 +1,6 @@
 import { Server } from 'http';
 import supertest from 'supertest';
-import startServer from '../server';
+import {startServer, stopServer } from '../server';
 import { UserModel } from '../models';
 import GeoLib from '../lib';
 const mongoose = require('mongoose');
@@ -29,18 +29,7 @@ describe('User API', () => {
 
   afterAll(async () => {
     await UserModel.deleteMany({});
-    await mongoose.connection.close();
-    await new Promise<void>((resolve, reject) => {
-      server.close((err) => {
-        if (err) reject(err);
-        resolve();
-        process.env.NODE_ENV = 'dev';
-      });
-    });
-  });
-
-  beforeEach(async () => {
-    // await UserModel.deleteMany({});
+    await stopServer()
   });
 
   describe('POST /api/login', () => {

@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { User, UserModel } from './models';
-import databaseInit from './database';
+import { databaseInit } from './database';
 
 export const jwtConfig = {
   secret: String(

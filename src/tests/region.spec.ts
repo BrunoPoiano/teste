@@ -1,0 +1,199 @@
+import { Server } from 'http';
+import supertest from 'supertest';
+import {startServer, stopServer } from '../server';
+import { Region, RegionModel, UserModel } from '../models';
+import GeoLib from '../lib';
+const mongoose = require('mongoose');
+
+describe('User API', () => {
+  let server: Server;
+  let request: supertest.SuperTest<supertest.Test>;
+  let token: string;
+  let region: Region
+
+  beforeAll(async () => {
+    process.env.NODE_ENV = 'test';
+    server = await startServer();
+    request = supertest(server);
+
+    await request
+      .post('/api/signin')
+      .send(
+        JSON.stringify({
+          email: 'bruno@teste.com',
+          name: 'Bruno',
+          address: 'Guariba - SP Brazil',
+        })
+      )
+      .set('Content-Type', 'application/json');
+
+    //Login User
+      const response = await request
+        .post('/api/login')
+        .send(
+          JSON.stringify({
+            email: 'bruno@teste.com',
+          })
+        )
+        .set('Content-Type', 'application/json');
+
+      token = response.body.token;
+  });
+
+  afterAll(async () => {
+    await UserModel.deleteMany({});
+    await stopServer()
+  });
+
+  describe('POST /api/region', () => {
+    it('should create a region', async () => {
+      const response = await request
+        .post('/api/region')
+        .send(
+          JSON.stringify({
+            name: 'Polygon',
+            coordinates: [
+              [
+                [
+                  -46.62529,
+                  -23.533773
+                ],
+                [
+                  -46.62429,
+                  -23.534773
+                ],
+                [
+                  -46.62329,
+                  -23.532773
+                ],
+                [
+                  -46.62529,
+                  -23.533773
+                ]
+              ]
+            ]
+          })
+        )
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("region");
+      region = response.body.region
+    });
+  });
+
+  describe('PUT /api/region', () => {
+    it('should update a region', async () => {
+      const response = await request
+        .put(`/api/region/${region._id}`)
+        .send(
+          JSON.stringify({
+            name: 'Polygon updated',
+            coordinates: [
+              [
+                [
+                  -46.62436,
+                  -23.533373
+                ],
+                [
+                  -46.62229,
+                  -23.532773
+                ],
+                [
+                  -46.62529,
+                  -23.536773
+                ],
+                [
+                  -46.62436,
+                  -23.533373
+                ]
+              ]
+            ]
+          })
+        )
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("message", "Region updated successfully");
+    });
+  });
+
+  describe('GET /api/region', () => {
+    it('should list user regions', async () => {
+      const response = await request
+        .get("/api/region/")
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+    });
+  });
+
+  describe('GET /api/region/find', () => {
+    it('should list regions on a specific point', async () => {
+      const response = await request
+        .get("/api/region/find/")
+        .send(
+          JSON.stringify({
+            "latitude": -46.62521,
+            "longitude": -23.533773
+          })
+        )
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+    });
+  });
+
+  describe('GET /api/region/find-near', () => {
+    it('should list regions in a certain distance from a point', async () => {
+      const response = await request
+        .get("/api/region/find-near")
+        .send(
+          JSON.stringify({
+            "latitude": -46.62521,
+            "longitude": -23.533773,
+            distance: 1000,
+            searchAll: false
+          })
+        )
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(200);
+    });
+  });
+
+  describe('GET /api/region/find-near', () => {
+      it('should list regions in a certain distance from a point, from all users', async () => {
+        const response = await request
+          .get("/api/region/find-near")
+          .send(
+            JSON.stringify({
+              "latitude": -46.62521,
+              "longitude": -23.533773,
+              distance: 1000,
+              searchAll: true
+            })
+          )
+          .set('Content-Type', 'application/json')
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(200);
+      });
+    });
+
+  describe('DELETE /api/region', () => {
+      it('should delete a region', async () => {
+        const response = await request
+          .delete(`/api/region/${region._id}`)
+          .set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(200);
+      });
+    });
+
+
+});

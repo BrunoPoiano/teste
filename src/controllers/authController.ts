@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { generateToken, passwordCompare } from '../auth';
 import { User, UserModel } from '../models';
-import databaseInit from '../database';
+import { databaseInit } from '../database';
 import lib from '../lib';
 
 export const createUser = async (req: Request, resp: Response) => {

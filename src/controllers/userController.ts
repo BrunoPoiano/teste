@@ -1,10 +1,10 @@
 /// <reference path="../types/express.d.ts" />
 import { Request, Response } from 'express';
-import databaseInit from '../database';
 import { User, UserModel } from '../models';
 import { expressjwt } from 'express-jwt';
 import lib from '../lib';
 import { body, validationResult } from 'express-validator';
+import { databaseInit } from '../database';
 
 export const createTesteUser = async (req: Request, resp: Response) => {
   try {
