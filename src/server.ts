@@ -1,8 +1,8 @@
-import * as app from 'express';
+import express from 'express';
 import { UserModel } from './models';
 
-const server = app();
-const router = app.Router();
+const server = express();
+const router = express.Router();
 
 const STATUS = {
   OK: 200,
@@ -44,22 +44,7 @@ router.get('/users/:id', async (req, res) => {
   return user;
 });
 
-router.put('/users/:id', async (req, res) => {
-  const { id } = req.params;
-  const { update } = req.body;
 
-  const user = await UserModel.findOne({ _id: id }).lean();
-
-  if (!user) {
-    res.status(STATUS.DEFAULT_ERROR).json({ message: 'Region not found' });
-  }
-
-  user.name = update.name;
-
-  await user.save();
-
-  return res.sendStatus(201);
-});
 
 server.use(router);
 

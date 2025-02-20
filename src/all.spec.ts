@@ -10,6 +10,7 @@ import './database';
 import { Region, RegionModel, UserModel } from './models';
 import GeoLib from './lib';
 import server from './server';
+import { after, afterEach, before, beforeEach, describe, it } from 'node:test';
 
 describe('Models', () => {
   let user;
