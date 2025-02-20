@@ -21,7 +21,7 @@ export const createTesteUser = async (req: Request, resp: Response) => {
   } catch (err) {
     console.error('error adding user:', err);
     return resp
-      .status(500)
+      .status(400)
       .json({ error: 'Failed to create user', details: err });
   }
 };
@@ -35,11 +35,11 @@ export const updateUser = async (req: Request, resp: Response) => {
     }
 
     if (!coordinates && !address) {
-      return resp.status(500).json({ error: 'Send a coordinates or address' });
+      return resp.status(400).json({ error: 'Send a coordinates or address' });
     }
     if (coordinates && address) {
       return resp
-        .status(500)
+        .status(400)
         .json({ error: 'Send only coordinates or address' });
     }
 

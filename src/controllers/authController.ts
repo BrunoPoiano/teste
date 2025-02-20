@@ -14,11 +14,11 @@ export const createUser = async (req: Request, resp: Response) => {
     }
 
     if (!coordinates && !address) {
-      return resp.status(500).json({ error: 'Send a coordinates or address' });
+      return resp.status(400).json({ error: 'Send a coordinates or address' });
     }
     if (coordinates && address) {
       return resp
-        .status(500)
+        .status(400)
         .json({ error: 'Send only coordinates or address' });
     }
     const newUser = new UserModel({
