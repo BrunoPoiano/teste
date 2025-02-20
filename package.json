@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' index.ts",
-    "test": "mocha --require ts-node/register ./src/**/*.spec.ts --exit",
+    "test": "NODE_ENV=test mocha --require ts-node/register ./src/**/*.spec.ts --exit",
     "format": "npx prettier --write ."
   },
   "author": "",
