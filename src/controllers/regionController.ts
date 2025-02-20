@@ -1,6 +1,6 @@
 /// <reference path="../types/express.d.ts" />
 import { Request, Response } from 'express';
-import { Region, RegionModel } from '../models';
+import { RegionModel } from '../models';
 
 export const getRegion = async (req: Request, resp: Response) => {
   try {

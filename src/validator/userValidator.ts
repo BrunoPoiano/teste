@@ -1,10 +1,12 @@
-import { body, validationResult } from "express-validator";
+import { body, validationResult } from 'express-validator';
 import { NextFunction, Request, Response } from 'express';
-import { UserModel } from "../models";
+import { UserModel } from '../models';
 
-export const userValidator = async (req: Request,
-resp: Response,
-next: NextFunction) => {
+export const userValidator = async (
+  req: Request,
+  resp: Response,
+  next: NextFunction
+) => {
   await Promise.all([
     body('name').isString().notEmpty().withMessage('Name is required').run(req),
     body('address').optional().isString().run(req),
@@ -26,9 +28,6 @@ next: NextFunction) => {
       .isArray({ min: 2, max: 2 })
       .withMessage('Coordinates must be an array of two elements')
       .custom((value: unknown[]) => {
-        if (!Array.isArray(value) || value.length !== 2) {
-          throw new Error('Coordinates must be an array of two elements');
-        }
         if (typeof value[0] !== 'number' || typeof value[1] !== 'number') {
           throw new Error('Coordinates must be an array of two numbers');
         }
@@ -41,6 +40,5 @@ next: NextFunction) => {
     return resp.status(400).json({ errors: errors.array() });
   }
 
-  return next()
-
-  }
+  return next();
+};

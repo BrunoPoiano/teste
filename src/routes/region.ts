@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 import * as regionController from '../controllers/regionController';
+import { regionValidator } from '../validator/regionValidator';
 
+//crud
 router.get('', regionController.getRegion);
-router.post('', regionController.createRegion);
-router.put('/:id', regionController.updateRegion);
+router.post('', regionValidator, regionController.createRegion);
+router.put('/:id', regionValidator, regionController.updateRegion);
 router.delete('/:id', regionController.deleteRegion);
-router.get('/search/', regionController.findRegion);
-router.get('/search_near/', regionController.findRegionNear);
+
+//search
+router.get('/find/', regionController.findRegion);
+router.get('/find-near/', regionController.findRegionNear);
 
 export default router;

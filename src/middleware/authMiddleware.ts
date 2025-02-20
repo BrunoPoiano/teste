@@ -1,5 +1,5 @@
-import { expressjwt } from "express-jwt";
-import { jwtConfig } from "../auth";
+import { expressjwt } from 'express-jwt';
+import { jwtConfig } from '../auth';
 
 export const authMiddleware = expressjwt({
   secret: jwtConfig.secret,
