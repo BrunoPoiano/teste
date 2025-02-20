@@ -45,8 +45,18 @@ export const regionFindValidator = async (
   next: NextFunction
 ) => {
   await Promise.all([
-    body('latitude').notEmpty().withMessage('latitude is required').isNumeric().withMessage('latitude must be a number').run(req),
-    body('longitude').notEmpty().withMessage('longitude is required').isNumeric().withMessage('longitude must be a number').run(req),
+    body('latitude')
+      .notEmpty()
+      .withMessage('latitude is required')
+      .isNumeric()
+      .withMessage('latitude must be a number')
+      .run(req),
+    body('longitude')
+      .notEmpty()
+      .withMessage('longitude is required')
+      .isNumeric()
+      .withMessage('longitude must be a number')
+      .run(req),
   ]);
 
   const errors = validationResult(req);

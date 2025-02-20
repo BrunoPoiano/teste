@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 import * as regionController from '../controllers/regionController';
-import { regionFindValidator, regionValidator } from '../validator/regionValidator';
+import {
+  regionFindValidator,
+  regionValidator,
+} from '../validator/regionValidator';
 
 //crud
 router.get('', regionController.getRegion);

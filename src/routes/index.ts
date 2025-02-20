@@ -8,7 +8,7 @@ import { userValidator } from '../validator/userValidator';
 import { authMiddleware } from '../middleware/authMiddleware';
 
 //Auth
-router.get('/login', authController.login);
+router.post('/login', authController.login);
 router.post('/signin', userValidator, authController.createUser);
 
 //user

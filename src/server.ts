@@ -1,8 +1,10 @@
 import express from 'express';
 import { UserModel } from './models';
+import routes from './routes/index';
+import databaseInit from './database';
+const mongoose = require('mongoose');
 
 const server = express();
-const router = express.Router();
 
 const STATUS = {
   OK: 200,
@@ -14,36 +16,13 @@ const STATUS = {
   DEFAULT_ERROR: 418,
 };
 
-router.get('/user', async (req, res) => {
-  const { page, limit } = req.query;
-
-  const [users, total] = await Promise.all([
-    UserModel.find().lean(),
-    UserModel.count(),
-  ]);
-
-  return res.json({
-    rows: users,
-    page,
-    limit,
-    total,
+server.use('/api', routes);
+const startServer = async () => {
+  await databaseInit(); // Aguarda a conexão com o banco antes de iniciar o servidor
+  return server.listen(3003, () => {
+    console.log('🚀 Server is running on port 3003');
   });
-});
+};
 
-router.get('/users/:id', async (req, res) => {
-  const { id } = req.params;
-
-  const user = await UserModel.findOne({ _id: id }).lean();
-
-  if (!user) {
-    res
-      .status(STATUS.INTERNAL_SERVER_ERROR)
-      .json({ message: 'Region not found' });
-  }
-
-  return user;
-});
-
-server.use(router);
-
-export default server.listen(3003);
+export { startServer }; // Exporta a função de inicialização
+export default server;

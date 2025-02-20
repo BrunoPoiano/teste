@@ -14,7 +14,7 @@ import { after, afterEach, before, beforeEach, describe, it } from 'node:test';
 
 describe('Models', () => {
   let user: User;
-  let session:any;
+  let session: any;
   const geoLibStub: Partial<typeof GeoLib> = {};
 
   before(async () => {
@@ -61,17 +61,16 @@ describe('Models', () => {
         user: user._id,
         name: faker.person.fullName(),
         geojson: {
-          "type": "Polygon",
-          "coordinates": [
+          type: 'Polygon',
+          coordinates: [
             [
-              [-46.625210, -23.533773],
-              [-46.624210, -23.534773],
-              [-46.623210, -23.532773],
-              [-46.625210, -23.533773]
-            ]
-          ]
-        }
-
+              [-46.62521, -23.533773],
+              [-46.62421, -23.534773],
+              [-46.62321, -23.532773],
+              [-46.62521, -23.533773],
+            ],
+          ],
+        },
       };
 
       const [region] = await RegionModel.create([regionData]);
@@ -98,7 +97,7 @@ describe('Models', () => {
   });
 
   it('should return a list of users', async () => {
-    const response = supertest(server).get("/api/user");
+    const response = supertest(server).get('/api/user');
 
     expect(response).to.have.property('status', 200);
   });
