@@ -17,12 +17,18 @@ const STATUS = {
 };
 
 server.use('/api', routes);
-const startServer = async () => {
-  await databaseInit(); // Aguarda a conexão com o banco antes de iniciar o servidor
-  return server.listen(3003, () => {
-    console.log('🚀 Server is running on port 3003');
-  });
-};
+databaseInit()
+  .then(() => {
+    server.use(express.json());
+    server.use('/api', routes);
 
-export { startServer }; // Exporta a função de inicialização
-export default server;
+    server.listen(3003, () => {
+      console.log(`🚀 Server running on http://localhost:3003`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ Failed to connect to the database:', err);
+    process.exit(1);
+  });
+
+export default server

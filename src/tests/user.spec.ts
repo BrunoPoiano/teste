@@ -1,26 +1,21 @@
 import { describe, it, before, after } from 'mocha';
 import { expect } from 'chai';
 import supertest from 'supertest';
-import mongoose from 'mongoose';
-import { UserModel } from './models';
-import server from './server';
+const mongoose = require('mongoose');
+
+import server from '../server';
+
 
 describe('User API', () => {
-  before(async function () {
-    this.timeout(10000); // Avoid timeout errors
+  let teste: any;
 
-    process.env.NODE_ENV = 'test';
-    process.env.MONGO_URI = 'mongodb://admin:secret@localhost:27017/oz-tech-test-test?authSource=admin';
-
-    if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(process.env.MONGO_URI, {
-      });
-    }
+  before(()=> {
+     teste = server;
   });
 
   describe('POST /api/signin', () => {
     it('should SignIn the user', async () => {
-      const response = await supertest(server)
+      const response = await supertest(teste)
         .post('/api/signin')
         .send({
           name: 'John Doe',
@@ -29,8 +24,8 @@ describe('User API', () => {
         })
         .expect('Content-Type', /json/)
         .expect(200)
-        .catch(err => {
-          console.error('Error response body:', err.response);
+        .catch((err: Error) => {
+          console.error('Error response body:', err);
           throw err;
         });
 
