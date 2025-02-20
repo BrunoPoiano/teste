@@ -3,7 +3,7 @@ import { databaseInit } from './src/database';
 import routes from './src/routes/index';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.NODE_PORT;
 
 databaseInit()
   .then(() => {

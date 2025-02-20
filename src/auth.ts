@@ -1,3 +1,6 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 import { expressjwt } from 'express-jwt';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
@@ -6,10 +9,7 @@ import { User, UserModel } from './models';
 import { databaseInit } from './database';
 
 export const jwtConfig = {
-  secret: String(
-    process.env.JWT_SECRET ||
-      'WA3B9jrGrcJV0CWWjNPXSSYnKyNszdrYNKcRJC1QpjW7w8G8pwv7q97WBc9'
-  ),
+  secret: String(process.env.JWT_SECRET),
   expiresIn: 86400,
 };
 

@@ -1,17 +1,16 @@
 services:
-  app:
+  ozmap_test:
     build: .
     ports:
       - '3000:3000'
-    environment:
-      - PORT=3000
-      - MONGO_URI=mongodb://admin:secret@mongo_db:27017/oz-tech-test?authSource=admin
     depends_on:
       - mongo_db
     volumes:
       - .:/app
       - /app/node_modules
     command: npm run dev
+    env_file:
+      - .env
 
   mongo_db:
     image: docker.io/library/mongo

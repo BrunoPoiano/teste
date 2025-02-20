@@ -1,6 +1,6 @@
 import { Server } from 'http';
 import supertest from 'supertest';
-import {startServer, stopServer } from '../server';
+import { startServer, stopServer } from '../server';
 import { UserModel } from '../models';
 import GeoLib from '../lib';
 const mongoose = require('mongoose');
@@ -29,7 +29,7 @@ describe('User API', () => {
 
   afterAll(async () => {
     await UserModel.deleteMany({});
-    await stopServer()
+    await stopServer();
   });
 
   describe('POST /api/login', () => {
@@ -79,15 +79,16 @@ describe('User API', () => {
     it('should update logged user', async () => {
       const response = await request
         .put('/api/user')
-        .send(JSON.stringify({
-          name: 'bruno',
-          email: 'bruno@updated.com',
-          address:
-            '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
-        }))
+        .send(
+          JSON.stringify({
+            name: 'bruno',
+            email: 'bruno@updated.com',
+            address:
+              '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
+          })
+        )
         .set('Authorization', `Bearer ${token}`)
         .set('Content-Type', 'application/json');
-
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('message', 'User updated');
@@ -98,7 +99,7 @@ describe('User API', () => {
     it('should delete logged user', async () => {
       const response = await request
         .delete('/api/user')
-        .set('Authorization', `Bearer ${token}`)
+        .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
     });

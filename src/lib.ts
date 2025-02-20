@@ -1,12 +1,12 @@
+const dotenv = require('dotenv');
+dotenv.config();
 import axios from 'axios';
 class GeoLib {
   private apiKey: string;
   private geocodingApiUrl: string;
 
   constructor() {
-    this.apiKey =
-      process.env.GEOCODING_API_KEY ||
-      'AIzaSyDy8-PqjlhwfFuG6m4zdQwP9bfAbibUVjw';
+    this.apiKey = process.env.GEOCODING_API_KEY || '';
     this.geocodingApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
   }
 

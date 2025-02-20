@@ -19,8 +19,8 @@ export const userValidator = async (
       .custom(async (value: string) => {
         const userlogged = req?.user;
         const user = await UserModel.findOne({ email: value });
-        if(userlogged?._id === user?._id){
-          return true
+        if (userlogged?._id === user?._id) {
+          return true;
         }
         if (user) {
           throw new Error('Email already exists');

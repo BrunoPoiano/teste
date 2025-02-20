@@ -13,7 +13,7 @@ async function startServer(): Promise<http.Server> {
   app.use(express.json());
   app.use('/api', routes);
 
-  await databaseInit();
+  await databaseInit(true);
 
   const port = process.env.PORT
     ? Number(process.env.PORT)
@@ -33,7 +33,7 @@ async function stopServer() {
     await mongoose.connection.close();
 
     await new Promise<void>((resolve) => server?.close(() => resolve())); // Close HTTP server
-    console.log("Server stopped.");
+    console.log('Server stopped.');
     server = null;
   }
 }
