@@ -3,9 +3,15 @@ import { generateToken, passwordCompare } from '../auth';
 import { User, UserModel } from '../models';
 import databaseInit from '../database';
 import lib from '../lib';
+import { validateUser } from './userController';
 
 export const createUser = async (req: Request, resp: Response) => {
   try {
+    const errors = await validateUser(req);
+    if (!errors.isEmpty()) {
+      return resp.status(400).json({ errors: errors.array() });
+    }
+
     const { name, email, address, coordinates } = req.body;
 
     const existingUser = await UserModel.findOne({ email: email });
