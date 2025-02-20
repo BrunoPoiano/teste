@@ -14,7 +14,7 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "strict": true,
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
   "types": ["reflect-metadata", "mocha"],
   "exclude": ["node_modules"],
