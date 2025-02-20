@@ -3,7 +3,6 @@ import supertest from 'supertest';
 import { startServer, stopServer } from '../server';
 import { UserModel } from '../models';
 import GeoLib from '../lib';
-const mongoose = require('mongoose');
 
 describe('User API', () => {
   let server: Server;

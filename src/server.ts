@@ -1,6 +1,6 @@
 import express from 'express';
 import routes from './routes/index';
-import { databaseInit, databaseDrop } from './database';
+import { databaseDrop, testDatabaseInit } from './database';
 import mongoose from 'mongoose';
 import http from 'http';
 
@@ -13,7 +13,7 @@ async function startServer(): Promise<http.Server> {
   app.use(express.json());
   app.use('/api', routes);
 
-  await databaseInit(true);
+  await testDatabaseInit();
 
   const port = process.env.PORT
     ? Number(process.env.PORT)
