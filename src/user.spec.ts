@@ -1,13 +1,13 @@
 import { after, before, describe, it } from "node:test";
 import supertest from "supertest";
-import server from "../server";
+import server from "./server";
 import mongoose, { mongo } from "mongoose";
-import { UserModel } from "../models";
+import { UserModel } from "./models";
 import { expect } from "chai";
 
 
 describe("User Api", () => {
-  let request = supertest(server)
+  const request = supertest(server)
   let userId: string
 
   before(async () => {

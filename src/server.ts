@@ -44,8 +44,6 @@ router.get('/users/:id', async (req, res) => {
   return user;
 });
 
-
-
 server.use(router);
 
 export default server.listen(3003);

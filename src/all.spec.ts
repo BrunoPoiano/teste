@@ -1,21 +1,21 @@
 import 'reflect-metadata';
 
 import * as mongoose from 'mongoose';
-import * as supertest from 'supertest';
+import supertest from 'supertest';
 import * as sinon from 'sinon';
 import { faker } from '@faker-js/faker';
 import { expect, assert } from 'chai';
 
 import './database';
-import { Region, RegionModel, UserModel } from './models';
+import { Region, RegionModel, User, UserModel } from './models';
 import GeoLib from './lib';
 import server from './server';
 import { after, afterEach, before, beforeEach, describe, it } from 'node:test';
 
 describe('Models', () => {
-  let user;
-  let session;
-  let geoLibStub: Partial<typeof GeoLib> = {};
+  let user: User;
+  let session:any;
+  const geoLibStub: Partial<typeof GeoLib> = {};
 
   before(async () => {
     geoLibStub.getAddressFromCoordinates = sinon
@@ -60,6 +60,18 @@ describe('Models', () => {
       const regionData: Omit<Region, '_id'> = {
         user: user._id,
         name: faker.person.fullName(),
+        geojson: {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-46.625210, -23.533773],
+              [-46.624210, -23.534773],
+              [-46.623210, -23.532773],
+              [-46.625210, -23.533773]
+            ]
+          ]
+        }
+
       };
 
       const [region] = await RegionModel.create([regionData]);
@@ -86,7 +98,7 @@ describe('Models', () => {
   });
 
   it('should return a list of users', async () => {
-    const response = supertest(server).get(`/user`);
+    const response = supertest(server).get("/api/user");
 
     expect(response).to.have.property('status', 200);
   });
