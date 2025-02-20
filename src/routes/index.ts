@@ -3,11 +3,13 @@ const router = express.Router();
 import userRoutes from './user';
 import regionRoutes from './region';
 import * as authController from '../controllers/authController';
-import { authMiddleware, userMiddleware } from '../auth';
+import { userMiddleware } from '../middleware/userMiddleware';
+import { userValidator } from '../validator/userValidator';
+import { authMiddleware } from '../middleware/authMiddleware';
 
 //Auth
 router.get('/login', authController.login);
-router.post('/signin', authController.createUser);
+router.post('/signin', userValidator, authController.createUser);
 
 //user
 router.use('/user', [authMiddleware, userMiddleware], userRoutes);
