@@ -10,9 +10,8 @@ describe('User API', () => {
   let token: string;
 
   beforeAll(async () => {
-    process.env.NODE_ENV = 'test';
     server = await startServer();
-    request = supertest(server);
+      request = supertest(server);
 
     await request
       .post('/api/signin')
@@ -27,7 +26,6 @@ describe('User API', () => {
   });
 
   afterAll(async () => {
-    await UserModel.deleteMany({});
     await stopServer();
   });
 

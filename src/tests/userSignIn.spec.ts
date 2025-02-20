@@ -9,13 +9,11 @@ describe('User API', () => {
   let request: supertest.SuperTest<supertest.Test>;
 
   beforeAll(async () => {
-    process.env.NODE_ENV = 'test';
     server = await startServer();
-    request = supertest(server);
+      request = supertest(server);
   });
 
   afterAll(async () => {
-    await UserModel.deleteMany({});
     await stopServer();
   });
 

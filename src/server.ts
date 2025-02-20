@@ -17,19 +17,17 @@ async function startServer(): Promise<http.Server> {
 
   const port = process.env.PORT
     ? Number(process.env.PORT)
-    : Math.floor(Math.random() * (50000 - 30000) + 30000); // Random port
+    : Math.floor(Math.random() * (50000 - 30000) + 30000);
 
   server = http.createServer(app).listen(port, () => {
     console.log(`🚀 Test server running on port: ${port}`);
   });
 
-  process.env.TEST_PORT = port.toString();
   return server;
 }
 
 async function stopServer() {
   if (server) {
-    await databaseDrop();
     await mongoose.connection.close();
 
     await new Promise<void>((resolve) => server?.close(() => resolve())); // Close HTTP server
