@@ -8,7 +8,7 @@ export const userValidator = async (
   next: NextFunction
 ) => {
   await Promise.all([
-    body('name').isString().notEmpty().withMessage('Name is required').run(req),
+    body('name').notEmpty().withMessage('Name is required').isString().run(req),
     body('address').optional().isString().run(req),
     body('email')
       .notEmpty()

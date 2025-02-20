@@ -9,7 +9,7 @@ export const regionValidator = async (
   next: NextFunction
 ) => {
   await Promise.all([
-    body('name').isString().notEmpty().withMessage('Name is required').run(req),
+    body('name').notEmpty().withMessage('Name is required').isString().run(req),
     body('coordinates')
       .notEmpty()
       .withMessage('coordinates is required')
@@ -30,6 +30,23 @@ export const regionValidator = async (
         return true;
       })
       .run(req),
+  ]);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return resp.status(400).json({ errors: errors.array() });
+  }
+  return next();
+};
+
+export const regionFindValidator = async (
+  req: Request,
+  resp: Response,
+  next: NextFunction
+) => {
+  await Promise.all([
+    body('latitude').notEmpty().withMessage('latitude is required').isNumeric().withMessage('latitude must be a number').run(req),
+    body('longitude').notEmpty().withMessage('longitude is required').isNumeric().withMessage('longitude must be a number').run(req),
   ]);
 
   const errors = validationResult(req);
