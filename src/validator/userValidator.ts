@@ -1,6 +1,7 @@
 import { body, validationResult } from 'express-validator';
 import { NextFunction, Request, Response } from 'express';
 import { UserModel } from '../models';
+import { loggedUser } from '../controllers/userController';
 
 export const userValidator = async (
   req: Request,
@@ -16,7 +17,11 @@ export const userValidator = async (
       .isEmail()
       .withMessage('Invalid email format')
       .custom(async (value: string) => {
+        const userlogged = req?.user;
         const user = await UserModel.findOne({ email: value });
+        if(userlogged?._id === user?._id){
+          return true
+        }
         if (user) {
           throw new Error('Email already exists');
         }

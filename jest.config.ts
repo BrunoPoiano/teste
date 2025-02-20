@@ -12,8 +12,5 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1', // Map your path aliases if you are using them
   },
   transformIgnorePatterns: ['/node_modules/'],
-  testMatch: [
-    "**/__tests__/**/*.ts?(x)",
-    "**/?(*.)+(spec|test).ts?(x)"
-  ],
+  testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],
 };

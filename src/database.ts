@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const env = {
-  MONGO_URI: process.env.NODE_ENV === 'test'
-    ? 'mongodb://admin:secret@localhost:27017/app-tests?authSource=admin'
-    : 'mongodb://admin:secret@mongo_db:27017/oz-tech-test?authSource=admin',
+  MONGO_URI:
+    process.env.NODE_ENV === 'test'
+      ? 'mongodb://admin:secret@localhost:27017/app-tests?authSource=admin'
+      : 'mongodb://admin:secret@mongo_db:27017/oz-tech-test?authSource=admin',
 };
 const databaseInit = async () => {
   try {

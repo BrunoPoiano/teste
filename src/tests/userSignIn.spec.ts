@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import startServer from '../server';
 import { UserModel } from '../models';
 import GeoLib from '../lib';
+const mongoose = require('mongoose');
 
 describe('User API', () => {
   let server: Server;
@@ -16,7 +17,7 @@ describe('User API', () => {
 
   afterAll(async () => {
     await UserModel.deleteMany({});
-
+    await mongoose.connection.close();
     await new Promise<void>((resolve, reject) => {
       server.close((err) => {
         if (err) reject(err);
