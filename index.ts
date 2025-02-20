@@ -1,5 +1,5 @@
-import databaseInit from './src/database';
 const express = require('express');
+import { databaseInit } from './src/database';
 import routes from './src/routes/index';
 
 const app = express();

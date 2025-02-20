@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-  const dbName = `app-tese-${Math.floor(Math.random() * 10000)}`; // Unique DB name
+const testDbName = `app-tese-${Math.floor(Math.random() * 10000)}`; // Unique DB name
 const env = {
   MONGO_URI:
     process.env.NODE_ENV === 'test'
-      ? `mongodb://admin:secret@localhost:27017/${dbName}?authSource=admin`
+      ? `mongodb://admin:secret@localhost:27017/${testDbName}?authSource=admin`
       : 'mongodb://admin:secret@mongo_db:27017/oz-tech-test?authSource=admin',
 };
 const databaseInit = async () => {
@@ -22,7 +22,7 @@ const databaseInit = async () => {
 
 const databaseDrop = async () => {
   if (mongoose.connection.readyState) {
-    console.log(`deleting database: ${dbName}`);
+    console.log(`deleting database: ${testDbName}`);
     await mongoose.connection.dropDatabase();
   }
 };
