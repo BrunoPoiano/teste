@@ -16,25 +16,23 @@ const STATUS = {
 
 let server: Express; // Declare server outside the initialization
 
-async function startServer(): Promise<http.Server> {  // Function to start the server
-  server = express(); // Initialize server here
-  server.use(express.json()); // Moved before routes
-  server.use('/api', routes); // Moved before database connection for test
+async function startServer(): Promise<http.Server> {
+  server = express();
+  server.use(express.json());
+  server.use('/api', routes);
 
   try {
-    await databaseInit(); // Await database connection
+    await databaseInit();
 
-    // Server listening is now inside the startServer function
-    const port = process.env.PORT || 3003; // Use environment port if available
-
+    const port = process.env.PORT ? Number(process.env.PORT) : 0; // Set to 0 for a dynamic port
     const app = server.listen(port, () => {
-      console.log(`🚀 Server running on http://localhost:${port}`);
+      console.log(`🚀 Server running on http://localhost:${(app.address() as any).port}`);
     });
 
-    return app; // Return the server instance
+    return app;
   } catch (err) {
     console.error('❌ Failed to connect to the database:', err);
-    process.exit(1); // Keep this for initial startup failure
+    process.exit(1);
   }
 }
 

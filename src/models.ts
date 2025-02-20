@@ -68,7 +68,10 @@ export class User extends Base {
     next(error as mongoose.CallbackError);
   }
 })
-@modelOptions({ schemaOptions: { validateBeforeSave: false } })
+@modelOptions({
+  schemaOptions: { validateBeforeSave: false },
+  options: { allowMixed: 0 }, // Suppress Mixed warning
+})
 @Index({ geojson: '2dsphere' })
 export class Region extends Base {
   @Prop({ required: true })

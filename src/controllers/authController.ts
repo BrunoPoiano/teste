@@ -64,6 +64,6 @@ export const login = async (req: Request, resp: Response) => {
     //}
 
     const token = generateToken(user);
-    resp.json({ token: token, user: user });
+    resp.status(200).json({ token: token, user: user });
   } catch (error) {}
 };
