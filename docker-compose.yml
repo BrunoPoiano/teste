@@ -1,5 +1,5 @@
 services:
-  ozmap_test:
+  ozmap_backend:
     build: backend/.
     ports:
       - "3000:3000"
@@ -7,6 +7,15 @@ services:
       - mongo_db
     env_file:
       - backend/.env
+
+  ozmap_frontend:
+    build: frontend/.
+    ports:
+      - "5173:5173"
+    depends_on:
+      - ozmap_backend
+    env_file:
+      - frontend/.env
 
   mongo_db:
     image: docker.io/library/mongo
