@@ -5,7 +5,7 @@ import { Region } from '../models';
 import GeoLib from '../lib';
 const mongoose = require('mongoose');
 
-describe('User API', () => {
+describe('Region API', () => {
   let server: Server;
   let request: supertest.SuperTest<supertest.Test>;
   let token: string;
@@ -22,6 +22,7 @@ describe('User API', () => {
           email: 'bruno@teste.com',
           name: 'Bruno',
           address: 'Guariba - SP Brazil',
+          password: 'abc12345!',
         })
       )
       .set('Content-Type', 'application/json');
@@ -32,6 +33,7 @@ describe('User API', () => {
       .send(
         JSON.stringify({
           email: 'bruno@teste.com',
+          password: 'abc12345!',
         })
       )
       .set('Content-Type', 'application/json');
@@ -266,8 +268,7 @@ describe('User API', () => {
     });
 
     it('should error delete a region', async () => {
-      const response = await request
-        .delete(`/api/region/${region._id}`)
+      const response = await request.delete(`/api/region/${region._id}`);
 
       expect(response.status).toBe(401);
     });

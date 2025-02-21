@@ -5,6 +5,7 @@ import { expressjwt } from 'express-jwt';
 import lib from '../lib';
 import { body, validationResult } from 'express-validator';
 import { databaseInit } from '../database';
+import { hashPassword } from '../auth';
 
 export const createTesteUser = async (req: Request, resp: Response) => {
   try {
@@ -14,6 +15,7 @@ export const createTesteUser = async (req: Request, resp: Response) => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       address: '1600 Amphitheatre Parkway, Mountain View, CA',
+      password: hashPassword('acb123!'),
       coordinates: [-122.084, 37.422],
     });
 
@@ -28,7 +30,7 @@ export const createTesteUser = async (req: Request, resp: Response) => {
 
 export const updateUser = async (req: Request, resp: Response) => {
   try {
-    const { name, email, address, coordinates } = req.body;
+    const { name, email, password, address, coordinates } = req.body;
     const user = req?.user;
     if (!user) {
       return resp.status(401).json({ error: 'User not found' });
@@ -37,6 +39,7 @@ export const updateUser = async (req: Request, resp: Response) => {
     if (!coordinates && !address) {
       return resp.status(400).json({ error: 'Send a coordinates or address' });
     }
+
     if (coordinates && address) {
       return resp
         .status(400)
@@ -44,6 +47,11 @@ export const updateUser = async (req: Request, resp: Response) => {
     }
 
     const userData: Partial<User> = { name, email };
+
+    if (password) {
+      userData.password = await hashPassword(password);
+    }
+
     if (!coordinates) {
       const { lat, lng } = await lib.getCoordinatesFromAddress(address);
       userData.coordinates = [lng, lat];

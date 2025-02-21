@@ -1,17 +1,12 @@
 import { Request, Response } from 'express';
-import { generateToken, passwordCompare } from '../auth';
+import { generateToken, hashPassword, passwordCompare } from '../auth';
 import { User, UserModel } from '../models';
 import { databaseInit } from '../database';
 import lib from '../lib';
 
 export const createUser = async (req: Request, resp: Response) => {
   try {
-    const { name, email, address, coordinates } = req.body;
-
-    const existingUser = await UserModel.findOne({ email: email });
-    if (existingUser) {
-      return resp.status(404).json({ error: 'Email already exists' });
-    }
+    const { name, email, address, coordinates, password } = req.body;
 
     if (!coordinates && !address) {
       return resp.status(400).json({ error: 'Send a coordinates or address' });
@@ -21,10 +16,12 @@ export const createUser = async (req: Request, resp: Response) => {
         .status(400)
         .json({ error: 'Send only coordinates or address' });
     }
+
     const newUser = new UserModel({
       name: name,
       email: email,
       coordinates: coordinates,
+      password: await hashPassword(password),
       address: address,
     });
 
@@ -57,11 +54,12 @@ export const login = async (req: Request, resp: Response) => {
       resp.status(401).json({ message: 'Invalid credentials' });
       return;
     }
-    //const isPasswordValid = await passwordCompare(password, user.password);
-    //if (!isPasswordValid) {
-    //resp.status(401).json({ message: "Invalid credentials" });
-    //return;
-    //}
+
+    const isPasswordValid = await passwordCompare(password, user.password);
+    if (!isPasswordValid) {
+      resp.status(401).json({ message: 'Invalid credentials' });
+      return;
+    }
 
     const token = generateToken(user);
     resp.status(200).json({ token: token, user: user });

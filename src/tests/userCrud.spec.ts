@@ -17,8 +17,9 @@ describe('User API', () => {
       .post('/api/signin')
       .send(
         JSON.stringify({
-          email: 'bruno@teste.com',
+          email: 'bruno@emailteste.com',
           name: 'Bruno',
+          password: 'abc12345!',
           address: '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
         })
       )
@@ -28,7 +29,8 @@ describe('User API', () => {
       .post('/api/login')
       .send(
         JSON.stringify({
-          email: 'bruno@teste.com',
+          email: 'bruno@emailteste.com',
+          password: 'abc12345!',
         })
       )
       .set('Content-Type', 'application/json');

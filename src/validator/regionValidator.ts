@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 
-type coordinatesType = [[[[number, number]]]];
-
 export const regionValidator = async (
   req: Request,
   resp: Response,

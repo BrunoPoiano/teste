@@ -25,6 +25,7 @@ describe('User Auth', () => {
           JSON.stringify({
             email: 'bruno@teste.com',
             name: 'Bruno',
+            password: 'abc12345!',
             address:
               '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
           })
@@ -42,6 +43,7 @@ describe('User Auth', () => {
           JSON.stringify({
             email: 'bruno@teste.com',
             name: 'Bruno',
+            password: 'abc12345!',
             address:
               '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
           })
@@ -58,6 +60,7 @@ describe('User Auth', () => {
         .send(
           JSON.stringify({
             email: 'bruno1@teste.com',
+            password: 'abc12345!',
             address:
               '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
           })
@@ -69,6 +72,23 @@ describe('User Auth', () => {
     });
 
     it('should error SignIn the user without email', async () => {
+      const response = await request
+        .post('/api/signin')
+        .send(
+          JSON.stringify({
+            name: 'Bruno',
+            password: 'abc12345!',
+            address:
+              '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
+          })
+        )
+        .set('Content-Type', 'application/json');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('errors');
+    });
+
+    it('should error SignIn the user without password', async () => {
       const response = await request
         .post('/api/signin')
         .send(
@@ -90,6 +110,7 @@ describe('User Auth', () => {
         .send(
           JSON.stringify({
             email: 'bruno2@teste.com',
+            password: 'abc12345!',
             name: 'Bruno 2',
           })
         )
@@ -105,6 +126,7 @@ describe('User Auth', () => {
         .send(
           JSON.stringify({
             email: 'bruno3@teste.com',
+            password: 'abc12345!',
             name: 'Bruno 3',
             address:
               '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
@@ -123,6 +145,7 @@ describe('User Auth', () => {
           JSON.stringify({
             email: 'bruno4@teste.com',
             name: 'Bruno 4',
+            password: 'abc12345!',
             address:
               '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
           })
@@ -140,6 +163,7 @@ describe('User Auth', () => {
           JSON.stringify({
             email: 'bruno5@teste.com',
             name: 'Bruno 5',
+            password: 'abc12345!',
             coordinates: [-48.2281579, -21.3570556],
           })
         )
@@ -157,6 +181,7 @@ describe('User Auth', () => {
         .send(
           JSON.stringify({
             email: 'bruno@teste.com',
+            password: 'abc12345!',
           })
         )
         .set('Content-Type', 'application/json');
@@ -165,12 +190,55 @@ describe('User Auth', () => {
       expect(response.body).toHaveProperty('token');
     });
 
-    it('should error login the user', async () => {
+    it('should error login the user with wrong email', async () => {
       const response = await request
         .post('/api/login')
         .send(
           JSON.stringify({
             email: 'bruno@error.com',
+            password: 'abc12345!',
+          })
+        )
+        .set('Content-Type', 'application/json');
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty('message', 'Invalid credentials');
+    });
+
+    it('should error login the user with invalid email', async () => {
+      const response = await request
+        .post('/api/login')
+        .send(
+          JSON.stringify({
+            email: 'bruno@.com',
+            password: 'abc12345!',
+          })
+        )
+        .set('Content-Type', 'application/json');
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should error login the user wihtout password', async () => {
+      const response = await request
+        .post('/api/login')
+        .send(
+          JSON.stringify({
+            email: 'bruno@error.com',
+          })
+        )
+        .set('Content-Type', 'application/json');
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should error login the user with wrong password', async () => {
+      const response = await request
+        .post('/api/login')
+        .send(
+          JSON.stringify({
+            email: 'bruno@error.com',
+            password: 'banana12345!',
           })
         )
         .set('Content-Type', 'application/json');

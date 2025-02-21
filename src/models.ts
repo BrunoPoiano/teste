@@ -39,6 +39,9 @@ export class User extends Base {
   email!: string;
 
   @Prop({ required: true })
+  password!: string;
+
+  @Prop({ required: true })
   address: string;
 
   @Prop({ required: true, type: () => [Number] })

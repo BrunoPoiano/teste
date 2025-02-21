@@ -35,7 +35,9 @@ const testDatabaseInit = async () => {
     return;
   }
 
-  mongoServer = await MongoMemoryServer.create();
+  mongoServer = await MongoMemoryServer.create({
+    instance: { port: 0 }
+  });
   const MONGO_URI_TEST = mongoServer.getUri();
 
   try {
