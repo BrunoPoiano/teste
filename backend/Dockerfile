@@ -5,4 +5,4 @@ COPY .env .
 RUN npm install && npm run build
 EXPOSE 3000
 
-CMD ["npx", "serve", "dist", "-l", "3000"]
+CMD ["node", "dist/index.js"]
