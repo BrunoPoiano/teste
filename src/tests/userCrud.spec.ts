@@ -1,6 +1,6 @@
 import { Server } from 'http';
 import supertest from 'supertest';
-import { startServer, stopServer } from '../server';
+import { startServer, stopServer } from './server';
 import { UserModel } from '../models';
 import GeoLib from '../lib';
 
@@ -11,7 +11,7 @@ describe('User API', () => {
 
   beforeAll(async () => {
     server = await startServer();
-      request = supertest(server);
+    request = supertest(server);
 
     await request
       .post('/api/signin')
@@ -23,43 +23,21 @@ describe('User API', () => {
         })
       )
       .set('Content-Type', 'application/json');
+
+    const response = await request
+      .post('/api/login')
+      .send(
+        JSON.stringify({
+          email: 'bruno@teste.com',
+        })
+      )
+      .set('Content-Type', 'application/json');
+
+    token = response.body.token;
   });
 
   afterAll(async () => {
     await stopServer();
-  });
-
-  describe('POST /api/login', () => {
-    it('should login the user', async () => {
-      const response = await request
-        .post('/api/login')
-        .send(
-          JSON.stringify({
-            email: 'bruno@teste.com',
-          })
-        )
-        .set('Content-Type', 'application/json');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('token');
-      token = response.body.token;
-    });
-  });
-
-  describe('POST /api/login', () => {
-    it('should Error login the user', async () => {
-      const response = await request
-        .post('/api/login')
-        .send(
-          JSON.stringify({
-            email: 'bruno@error.com',
-          })
-        )
-        .set('Content-Type', 'application/json');
-
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('message', 'Invalid credentials');
-    });
   });
 
   describe('GET /api/user', () => {
@@ -69,6 +47,12 @@ describe('User API', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
+    });
+
+    it('should error get logged user', async () => {
+      const response = await request.get('/api/user');
+
+      expect(response.status).toBe(401);
     });
   });
 
@@ -90,6 +74,22 @@ describe('User API', () => {
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('message', 'User updated');
     });
+
+    it('should errorupdate logged user', async () => {
+      const response = await request
+        .put('/api/user')
+        .send(
+          JSON.stringify({
+            name: 'bruno',
+            email: 'bruno@updated.com',
+            address:
+              '14840-000 - Vila Pacifico, Guariba - SP, 14840-000, Brazil',
+          })
+        )
+        .set('Content-Type', 'application/json');
+
+      expect(response.status).toBe(401);
+    });
   });
 
   describe('DELETE /api/user', () => {
@@ -99,6 +99,12 @@ describe('User API', () => {
         .set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(200);
+    });
+
+    it('should error delete logged user', async () => {
+      const response = await request.delete('/api/user');
+
+      expect(response.status).toBe(401);
     });
   });
 });

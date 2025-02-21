@@ -1,16 +1,16 @@
 import { Server } from 'http';
 import supertest from 'supertest';
-import { startServer, stopServer } from '../server';
 import { UserModel } from '../models';
 import GeoLib from '../lib';
+import { startServer, stopServer } from './server';
 
-describe('User API', () => {
+describe('User Auth', () => {
   let server: Server;
   let request: supertest.SuperTest<supertest.Test>;
 
   beforeAll(async () => {
     server = await startServer();
-      request = supertest(server);
+    request = supertest(server);
   });
 
   afterAll(async () => {
@@ -147,6 +147,36 @@ describe('User API', () => {
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('message', 'User created');
+    });
+  });
+
+  describe('POST /api/login', () => {
+    it('should login the user', async () => {
+      const response = await request
+        .post('/api/login')
+        .send(
+          JSON.stringify({
+            email: 'bruno@teste.com',
+          })
+        )
+        .set('Content-Type', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('token');
+    });
+
+    it('should error login the user', async () => {
+      const response = await request
+        .post('/api/login')
+        .send(
+          JSON.stringify({
+            email: 'bruno@error.com',
+          })
+        )
+        .set('Content-Type', 'application/json');
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty('message', 'Invalid credentials');
     });
   });
 });

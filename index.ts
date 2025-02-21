@@ -11,10 +11,10 @@ databaseInit()
     app.use('/api', routes);
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
-    console.error('❌ Failed to connect to the database:', err);
+    console.error('Failed to connect to the database:', err);
     process.exit(1);
   });

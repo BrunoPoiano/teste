@@ -7,29 +7,31 @@ let mongoServer: MongoMemoryServer;
 let isConnected = false;
 
 const databaseInit = async () => {
-  if (isConnected) {
-    console.log('✅ Already connected to the main database.');
+  if (process.env.NODE_ENV !== 'dev') {
     return;
   }
 
-  const MONGO_URI = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@mongo_db:${process.env.MONGO_PORT}/${process.env.MONGO_NAME}?authSource=admin`;
-
+  if (isConnected) {
+    console.log('Already connected to the main database.');
+    return;
+  }
+  const MONGO_URI = `mongodb://${process.env.MONGO_PASSWORD}:${process.env.MONGO_USERNAME}@mongo_db:${process.env.MONGO_PORT}/${process.env.MONGO_NAME}?authSource=admin`;
   try {
     await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
     isConnected = true;
-    console.log('✅ Connected to main database');
+    console.log('Connected to main database');
   } catch (error) {
-    console.error('❌ Main database connection error:', error);
+    console.error('Main database connection error:', error);
     process.exit(1);
   }
 };
 
 const testDatabaseInit = async () => {
   if (isConnected) {
-    console.log('✅ Already connected to the test database.');
+    console.log('Already connected to the test database.');
     return;
   }
 
@@ -42,9 +44,9 @@ const testDatabaseInit = async () => {
       useUnifiedTopology: true,
     });
     isConnected = true;
-    console.log('✅ Connected to in-memory test database');
+    console.log('Connected to in-memory test database');
   } catch (error) {
-    console.error('❌ Test database connection error:', error);
+    console.error('Test database connection error:', error);
     process.exit(1);
   }
 };
@@ -55,7 +57,7 @@ const databaseDrop = async () => {
     await mongoose.connection.close();
     isConnected = false;
     if (mongoServer) await mongoServer.stop();
-    console.log('🛑 Test database stopped.');
+    console.log('Test database stopped.');
   }
 };
 

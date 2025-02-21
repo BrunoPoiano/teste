@@ -1,6 +1,6 @@
 import express from 'express';
-import routes from './routes/index';
-import { databaseDrop, testDatabaseInit } from './database';
+import routes from '../routes/index';
+import { databaseDrop, testDatabaseInit } from '../database';
 import mongoose from 'mongoose';
 import http from 'http';
 
@@ -20,7 +20,7 @@ async function startServer(): Promise<http.Server> {
     : Math.floor(Math.random() * (50000 - 30000) + 30000);
 
   server = http.createServer(app).listen(port, () => {
-    console.log(`🚀 Test server running on port: ${port}`);
+    console.log(`Test server running on port: ${port}`);
   });
 
   return server;
