@@ -21,6 +21,8 @@
     system-ui, -apple-system, blinkmacsystemfont, 'segoe ui', roboto, oxygen, ubuntu, cantarell,
     'open sans', 'helvetica neue', sans-serif;
 
+  --max_width: 1500px;
+
   --success: green;
   --danger: red;
   --atention: orange;
@@ -36,6 +38,8 @@ body {
   font-family: var(--font-family);
   font-size: 1.125rem;
   padding: 1em;
+  display: grid;
+  place-items: center;
 }
 
 body > :is(header, footer),
@@ -43,6 +47,11 @@ section,
 main,
 article {
   container-type: inline-size;
+}
+
+main {
+  max-width: var(--max_width);
+  width: 100%;
 }
 
 h1,
@@ -113,7 +122,7 @@ textarea {
 }
 
 input {
-  padding: 0.1rem 0.3rem;
+  padding: 0.4rem 0.5rem;
   border-radius: 8px;
 }
 
@@ -177,6 +186,19 @@ form {
       --bg: var(--atention);
     }
   }
+}
+
+[data-danger] {
+  color: var(--danger);
+}
+[data-success] {
+  color: var(--success);
+}
+[data-atention] {
+  color: var(--atention);
+}
+[data-default] {
+  color: var(--default);
 }
 
 @media (prefers-reduced-motion: no-preference) {

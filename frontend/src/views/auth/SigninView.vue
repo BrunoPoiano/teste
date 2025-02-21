@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import axiosInstance from '../../axios'
 
 const router = useRouter()
 
@@ -7,14 +8,22 @@ const sendForm = (e: Event) => {
   e.preventDefault()
   const formData = new FormData(e.target as HTMLFormElement)
   const formObject = Object.fromEntries(formData.entries())
-  console.log('aqui login', formObject)
+
+  axiosInstance
+    .post('/signin', formObject)
+    .then(() => {
+      router.push('/login')
+    })
+    .catch((error) => {
+      console.error('Error:', error.response ? error.response.data : error.message)
+    })
 }
 </script>
 
 <template>
   <section class="login">
     <h1>Sign In</h1>
-    <form v-on:submit="sendForm" id="testForm">
+    <form v-on:submit="sendForm" id="signin_form">
       <div>
         <label for="">Name</label>
         <input type="string" id="name" name="name" required placeholder="Name" />
