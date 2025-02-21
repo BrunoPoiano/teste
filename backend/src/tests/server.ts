@@ -7,7 +7,7 @@ import http from 'http';
 let server: http.Server | null = null;
 
 async function startServer(): Promise<http.Server> {
-  if (server) return server; // Avoid starting multiple servers
+  if (server) return server;
 
   const app = express();
   app.use(express.json());
@@ -28,10 +28,12 @@ async function startServer(): Promise<http.Server> {
 
 async function stopServer() {
   if (server) {
-    await mongoose.connection.close();
-
-    await new Promise<void>((resolve) => server?.close(() => resolve())); // Close HTTP server
-    console.log('Server stopped.');
+    if (mongoose.connection.readyState) {
+      await mongoose.connection.dropDatabase();
+      await mongoose.connection.close();
+    }
+    await new Promise<void>((resolve) => server?.close(() => resolve()));
+    console.log('Server and database connections stopped.');
     server = null;
   }
 }
