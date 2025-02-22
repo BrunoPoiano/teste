@@ -1,7 +1,8 @@
 <template>
   <GoogleMap
+    v-if="googleApi"
     id="map"
-    api-key="AIzaSyDy8-PqjlhwfFuG6m4zdQwP9bfAbibUVjw"
+    :api-key="googleApi"
     style="width: 100%; height: 500px"
     :center="center"
     :zoom="5"
@@ -24,6 +25,7 @@ export default {
   },
   data() {
     return {
+      googleApi: import.meta.env.VITE_GEOCODING_API_KEY,
       center: { lat: 0, lng: 0 },
       polygonOptions: {
         paths: [],

@@ -258,3 +258,7 @@ dialog {
     scroll-padding-top: 4rem;
   }
 }
+
+.map_wrapper {
+  padding: 2.5rem;
+}

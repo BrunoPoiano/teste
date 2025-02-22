@@ -1,6 +1,7 @@
+import axios from 'axios';
 const dotenv = require('dotenv');
 dotenv.config();
-import axios from 'axios';
+
 class GeoLib {
   private apiKey: string;
   private geocodingApiUrl: string;
@@ -18,7 +19,7 @@ class GeoLib {
         throw new Error('Geocoding API key not configured');
       }
 
-      const [lng, lat] = coordinates;
+      const [lat, lng] = coordinates;
       const response = await axios.get(this.geocodingApiUrl, {
         params: {
           latlng: `${lat},${lng}`,
@@ -65,6 +66,8 @@ class GeoLib {
       if (!response.data.results || response.data.results.length === 0) {
         throw new Error('No coordinates found for this address');
       }
+
+      console.log(response.data.results[0].geometry);
 
       const { lat, lng } = response.data.results[0].geometry.location;
       return { lat, lng };

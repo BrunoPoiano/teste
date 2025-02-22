@@ -1,8 +1,8 @@
 <template>
   <nav v-if="is_loged">
     <div>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/profile">Profile</RouterLink>
+      <RouterLink to="/">Dashboard</RouterLink>
+      <RouterLink to="/profile">Perfil</RouterLink>
     </div>
     <div>
       <ColorScheme />

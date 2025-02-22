@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import Map from '../../map/Index.vue'
+import Map from '../../map/MapPolygon.vue'
 import axiosInstance from '@/axios'
 
 export default {

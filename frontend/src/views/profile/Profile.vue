@@ -58,6 +58,7 @@
         </Loading>
       </div>
     </form>
+    <MapMarker v-if="userInfo.coordinates.length == 2" :coordinates="userInfo.coordinates" />
     <div class="deleteAccountButton">
       <button @click="deleteAccount" :disabled="loadingDelete">Delete Account</button>
     </div>
@@ -65,12 +66,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axiosInstance from '../../axios'
 import Loading from '@/components/global/Loading.vue'
+import MapMarker from '@/components/map/MapMarker.vue'
 
-const userInfo = ref({ name: '', email: '', new_password: '', address: '' })
+type User = {
+  id: string
+  email: string
+  name: string
+  address: string
+  coordinates: [number, number]
+}
+
+const userInfo = ref<User>(JSON.parse(localStorage.getItem('USER_DATA') || ''))
 const router = useRouter()
 const loadingForm = ref(false)
 const loadingDelete = ref(false)
@@ -79,7 +89,7 @@ const deleteAccount = () => {
   loadingDelete.value = true
   axiosInstance
     .delete('/user')
-    .then(({ data }) => {
+    .then(() => {
       localStorage.removeItem('USER_TOKEN')
       localStorage.removeItem('USER_DATA')
       router.push('/login')
@@ -102,6 +112,8 @@ const sendForm = async (e: Event) => {
     .put('/user', formObject)
     .then(({ data }) => {
       console.log('updated')
+      localStorage.setItem('USER_DATA', JSON.stringify(data.user))
+      userInfo.value = data.user
     })
     .catch((error) => {
       console.error('Error:', error.response ? error.response.data : error.message)
@@ -110,10 +122,6 @@ const sendForm = async (e: Event) => {
       loadingForm.value = false
     })
 }
-
-onMounted(() => {
-  userInfo.value = JSON.parse(localStorage.getItem('USER_DATA') || '')
-})
 </script>
 
 <style scoped>

@@ -52,11 +52,14 @@ export const updateUser = async (req: Request, resp: Response) => {
       userData.password = await hashPassword(password);
     }
 
-    if (!coordinates) {
+    if (address) {
+      userData.address = address;
       const { lat, lng } = await lib.getCoordinatesFromAddress(address);
-      userData.coordinates = [lng, lat];
+      userData.coordinates = [lat, lng];
     }
-    if (!address) {
+
+    if (coordinates) {
+      userData.coordinates = coordinates;
       userData.address = await lib.getAddressFromCoordinates(coordinates);
     }
 
