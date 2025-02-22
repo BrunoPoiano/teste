@@ -3,23 +3,68 @@
     {{ action == 'create' ? 'Criar Regiao' : 'Editar Regiao' }}
   </button>
   <Teleport to="body">
-    <dialog id="regions_dialog">
+    <dialog id="regions_dialog" style="max-width: 50ch">
       <button data-modal-close @click="closeModal">X</button>
-      <form v-on:submit="sendForm">
+      <form @submit.prevent="sendForm">
         <div>
           <label for="name">Nome:</label>
           <input type="text" id="name" name="name" v-model="form.name" required />
         </div>
         <div>
-          <div v-for="(coordinate, index) in coordinates" v-bind:key="index">
-            <span>{{ coordinate[0] }}</span>
-            <span>{{ coordinate[1] }}</span>
+          <div
+            class="coordinateForm"
+            v-for="(coordinate, index) in form.coordinates"
+            v-bind:key="index"
+            :data-index="index"
+          >
+            <div>
+              <label :for="`lat-${index}`">Latitude</label>
+              <input
+                type="number"
+                step="any"
+                :id="`lat-${index}`"
+                v-model="coordinate[0]"
+                placeholder="Latitude"
+              />
+            </div>
+            <div>
+              <label :for="`lng-${index}`">Longitude</label>
+              <input
+                type="number"
+                step="any"
+                :id="`lng-${index}`"
+                v-model="coordinate[1]"
+                placeholder="Longitude"
+              />
+            </div>
+            <button type="button" @click="removeCoordinate(index)">remove</button>
+          </div>
+          <div class="coordinateForm" v-if="form.coordinates.length > 1">
+            <div>
+              <label for="lat">Latitude</label>
+              <input
+                disabled
+                type="number"
+                step="any"
+                id="lat"
+                v-model="form.coordinates[0][0]"
+                placeholder="Latitude"
+              />
+            </div>
+            <div>
+              <label for="lgn">Longitude</label>
+              <input
+                disabled
+                type="number"
+                step="any"
+                id="lgn"
+                v-model="form.coordinates[0][1]"
+                placeholder="Longitude"
+              />
+            </div>
           </div>
 
-          <div>
-            <input type="number" />
-            <input type="number" />
-          </div>
+          <button type="button" @click="addCoordinate">Adicionar Coordenada</button>
         </div>
 
         <div class="action">
@@ -48,23 +93,30 @@ export default {
     return {
       form: {
         name: '',
-        coordinated: [],
+        coordinates: [] as number[][],
       },
     }
   },
   methods: {
+    addCoordinate() {
+      this.form.coordinates.push([0, 0])
+    },
+    removeCoordinate(index: number) {
+      this.form.coordinates.splice(index, 1)
+    },
     sendForm(event: Event) {
       event.preventDefault()
-      axiosInstance.post('region', {
-        name: 'Polygon 1',
-        coordinates: [
-          [
-            [-46.62529, -23.533773],
-            [-46.62429, -23.534773],
-            [-46.62329, -23.532773],
-            [-46.62529, -23.533773],
-          ],
-        ],
+      const params = JSON.parse(JSON.stringify(this.form))
+
+      params.coordinates.push(params.coordinates[0])
+      params.coordinates = [params.coordinates]
+      console.log(params)
+
+      axiosInstance.post('region', params).then(() => {
+        alert('Regiao criada com sucesso!')
+        this.form = { name: '', coordinates: [] }
+        this.closeModal()
+        this.$emit('refreshRegions')
       })
     },
     openModal() {
@@ -78,3 +130,15 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.coordinateForm {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  input {
+    min-width: min(10ch, 100%);
+  }
+}
+</style>

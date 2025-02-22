@@ -31,7 +31,7 @@
 
 html {
   hanging-punctuation: first last;
-  color-scheme: light;
+  color-scheme: light dark;
 }
 
 body {
@@ -136,8 +136,7 @@ img {
 button {
   cursor: pointer;
   min-width: min(10ch, 100%);
-
-  --bg: #fff;
+  --bg: light-dark(#efefef, #3c3c3c);
   background: var(--bg);
   color: lch(from var(--bg) calc((49.44 - l) * infinity) 0 0);
 
@@ -207,6 +206,23 @@ form {
   color: var(--default);
 }
 
+[data-bg-danger] {
+  background: var(--danger);
+  --bg: var(--danger);
+}
+[data-bg-success] {
+  background: var(--success);
+  --bg: var(--success);
+}
+[data-bg-atention] {
+  background: var(--atention);
+  --bg: var(--atention);
+}
+[data-bg-default] {
+  background: var(--default);
+  --bg: var(--default);
+}
+
 dialog {
   padding: 45px 20px 20px;
   position: relative;
@@ -218,14 +234,13 @@ dialog {
   max-width: 30rem;
   width: 100%;
 
-  background: white;
   -webkit-box-shadow: 0px 0px 12px 0px var(--neutral-color-100);
   -moz-box-shadow: 0px 0px 12px 0px var(--neutral-color-100);
   box-shadow: 0px 0px 12px 0px var(--neutral-color-100);
 
   button[data-modal-close] {
     background: none;
-
+    color: light-dark(#000, #efefef);
     position: absolute;
     top: 5px;
     right: 10px;

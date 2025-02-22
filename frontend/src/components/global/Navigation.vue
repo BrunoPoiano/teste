@@ -4,7 +4,10 @@
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/profile">Profile</RouterLink>
     </div>
-    <button class="logout" @click="logout">Logout</button>
+    <div>
+      <ColorScheme />
+      <button class="logout" @click="logout">Logout</button>
+    </div>
   </nav>
 </template>
 
@@ -12,6 +15,7 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import eventBus from '../../eventBus/index'
+import ColorScheme from './ColorScheme.vue'
 
 const is_loged = ref()
 const router = useRouter()
@@ -49,6 +53,11 @@ nav {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    width: fit-content;
+    &:nth-child(2) {
+      width: 300px;
+      justify-content: flex-end;
+    }
   }
 
   .logout {
