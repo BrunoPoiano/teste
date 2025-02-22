@@ -1,5 +1,5 @@
-<template >
-  <h1>User Info</h1>
+<template>
+  <h1>Dashboard de Usuario</h1>
 
   <div class="form">
     <form id="edit_form" v-on:submit="sendForm">
@@ -12,6 +12,7 @@
           name="name"
           required
           placeholder="Name"
+          :disabled="loadingForm"
         />
       </div>
       <div>
@@ -23,6 +24,7 @@
           name="email"
           required
           placeholder="Email"
+          :disabled="loadingForm"
         />
       </div>
       <div>
@@ -34,6 +36,7 @@
           v-model="userInfo.new_password"
           placeholder="Minimo 6 characters"
           minlength="6"
+          :disabled="loadingForm"
         />
         <small data-danger>Edit to change the current password</small>
       </div>
@@ -46,25 +49,34 @@
           name="address"
           required
           placeholder="address"
+          :disabled="loadingForm"
         />
       </div>
       <div class="action">
-        <button type="submit">Enviar</button>
+        <Loading :loading="loadingForm">
+          <button type="submit">Enviar</button>
+        </Loading>
       </div>
     </form>
-    <button @click="deleteAccount">Delete Account</button>
+    <div class="deleteAccountButton">
+      <button @click="deleteAccount" :disabled="loadingDelete">Delete Account</button>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts" >
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axiosInstance from '../../axios'
+import Loading from '@/components/global/Loading.vue'
 
 const userInfo = ref({ name: '', email: '', new_password: '', address: '' })
 const router = useRouter()
+const loadingForm = ref(false)
+const loadingDelete = ref(false)
 
 const deleteAccount = () => {
+  loadingDelete.value = true
   axiosInstance
     .delete('/user')
     .then(({ data }) => {
@@ -75,6 +87,9 @@ const deleteAccount = () => {
     .catch((error) => {
       console.error('Error:', error.response ? error.response.data : error.message)
     })
+    .finally(() => {
+      loadingDelete.value = false
+    })
 }
 
 const sendForm = async (e: Event) => {
@@ -82,6 +97,7 @@ const sendForm = async (e: Event) => {
   const formData = new FormData(e.target as HTMLFormElement)
   const formObject = Object.fromEntries(formData.entries())
 
+  loadingForm.value = true
   axiosInstance
     .put('/user', formObject)
     .then(({ data }) => {
@@ -89,6 +105,9 @@ const sendForm = async (e: Event) => {
     })
     .catch((error) => {
       console.error('Error:', error.response ? error.response.data : error.message)
+    })
+    .finally(() => {
+      loadingForm.value = false
     })
 }
 
@@ -104,7 +123,7 @@ onMounted(() => {
     margin-inline: auto;
     width: min(80ch, 100%);
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(35ch, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(35ch, 100%), 1fr));
     gap: 1rem;
 
     div {
@@ -118,6 +137,14 @@ onMounted(() => {
       display: flex;
       justify-content: end;
     }
+  }
+}
+
+.deleteAccountButton {
+  display: flex;
+  justify-content: flex-end;
+  button {
+    --bg: var(--danger);
   }
 }
 </style>
