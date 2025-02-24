@@ -25,13 +25,17 @@ export const createUser = async (req: Request, resp: Response) => {
       address: address,
     });
 
-    if (!coordinates) {
+    if (address) {
+      newUser.address = address;
       const { lat, lng } = await lib.getCoordinatesFromAddress(address);
-      newUser.coordinates = [lng, lat];
+      newUser.coordinates = [lat, lng];
     }
-    if (!address) {
+
+    if (coordinates) {
+      newUser.coordinates = coordinates;
       newUser.address = await lib.getAddressFromCoordinates(coordinates);
     }
+
     await newUser.save();
 
     return resp.status(201).json({ message: 'User created', user: newUser });

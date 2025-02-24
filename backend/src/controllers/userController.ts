@@ -90,7 +90,7 @@ export const deleteUser = async (req: Request, resp: Response) => {
 
     return resp.status(200).json({ message: 'User deleted' });
   } catch (err) {
-    console.error("Error deleting user:", err);
+    console.error('Error deleting user:', err);
     return resp.status(500).json(err);
   }
 };
@@ -103,7 +103,7 @@ export const loggedUser = async (req: Request, resp: Response) => {
     }
     return resp.status(200).json(user);
   } catch (err) {
-    console.error("Error getting logged user:", err);
+    console.error('Error getting logged user:', err);
     return resp.status(500).json(err);
   }
 };

@@ -95,7 +95,9 @@ export const findRegion = async (req: Request, resp: Response) => {
     const longitude = Number.parseFloat(req.query.longitude as string);
 
     if (!latitude || !longitude) {
-      return resp.status(500).json({ message: 'missing arguments' });
+      return resp
+        .status(500)
+        .json({ message: 'missing latitude or longitude' });
     }
 
     const regions = await RegionModel.find({
@@ -103,10 +105,7 @@ export const findRegion = async (req: Request, resp: Response) => {
         $geoIntersects: {
           $geometry: {
             type: 'Point',
-            coordinates: [
-              latitude,
-              longitude,
-            ],
+            coordinates: [latitude, longitude],
           },
         },
       },
@@ -130,26 +129,27 @@ export const findRegionNear = async (req: Request, resp: Response) => {
     const latitude = Number.parseFloat(req.query.latitude as string);
     const longitude = Number.parseFloat(req.query.longitude as string);
     const distanceQuery = req.query.distance;
-      const distance = typeof distanceQuery === 'string' ? Number.parseInt(distanceQuery, 10) : 1000;
-    const searchAll = req.query.searchAll || "false";
+    const distance =
+      typeof distanceQuery === 'string'
+        ? Number.parseInt(distanceQuery, 10)
+        : 1000;
+    const searchAll = req.query.searchAll || 'false';
 
     if (!latitude || !longitude) {
-      return resp.status(500).json({ message: 'missing arguments' });
+      return resp
+        .status(500)
+        .json({ message: 'missing latitude or longitude' });
     }
 
     let query = {};
-    if (searchAll === "false")       query = { user: user._id }
-
+    if (searchAll === 'false') query = { user: user._id };
 
     const regions = await RegionModel.aggregate([
       {
         $geoNear: {
           near: {
             type: 'Point',
-            coordinates: [
-                latitude,
-              longitude,
-            ],
+            coordinates: [latitude, longitude],
           },
           maxDistance: distance,
           spherical: true,
@@ -158,14 +158,14 @@ export const findRegionNear = async (req: Request, resp: Response) => {
           query: query,
         },
       },
-        {
-                $lookup: {
-                  from: 'users',
-                  localField: 'user',
-                  foreignField: '_id',
-                  as: 'userDetails',
-                },
-              },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'userDetails',
+        },
+      },
     ]);
 
     resp.status(200).json(regions);

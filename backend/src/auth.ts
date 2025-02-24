@@ -1,12 +1,9 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-import { expressjwt } from 'express-jwt';
-import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { User, UserModel } from './models';
-import { databaseInit } from './database';
+import { User } from './models';
 
 export const jwtConfig = {
   secret: String(process.env.JWT_SECRET),

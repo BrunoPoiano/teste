@@ -1,7 +1,5 @@
 import { Server } from 'http';
 import supertest from 'supertest';
-import { UserModel } from '../models';
-import GeoLib from '../lib';
 import { startServer, stopServer } from './server';
 
 describe('User Auth', () => {
