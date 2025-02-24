@@ -1,5 +1,5 @@
 <template>
-  <h1>Dashboard de Usuario</h1>
+  <h2>Dados de Usuario</h2>
 
   <div class="form">
     <form id="edit_form" v-on:submit="sendForm">
@@ -77,13 +77,16 @@ type User = {
   email: string
   name: string
   address: string
+  new_password: string
   coordinates: [number, number]
 }
 
-const userInfo = ref<User>(JSON.parse(localStorage.getItem('USER_DATA') || ''))
+const userInfo = ref<User>(JSON.parse(localStorage.getItem('USER_DATA') || '{}'))
 const router = useRouter()
 const loadingForm = ref(false)
 const loadingDelete = ref(false)
+
+console.log(userInfo.value)
 
 const deleteAccount = () => {
   loadingDelete.value = true

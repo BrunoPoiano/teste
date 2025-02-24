@@ -48,13 +48,13 @@ export const regionFindValidator = async (
       .withMessage('latitude is required')
       .isNumeric()
       .withMessage('latitude must be a number')
-      .run(req),
+      .run(req.query),
     body('longitude')
       .notEmpty()
       .withMessage('longitude is required')
       .isNumeric()
       .withMessage('longitude must be a number')
-      .run(req),
+      .run(req.query),
   ]);
 
   const errors = validationResult(req);

@@ -32,7 +32,7 @@ export const createRegion = async (req: Request, resp: Response) => {
 
     const newRegion = new RegionModel({
       user: user._id,
-      name: name,
+      name: name.toLowerCase(),
       geojson: { type: 'Polygon', coordinates: coordinates },
     });
     await newRegion.save();
@@ -51,6 +51,7 @@ export const updateRegion = async (req: Request, resp: Response) => {
     }
     const regionId = req.params.id;
     const regionData = req.body;
+    regionData.name = regionData.name.toLowerCase();
 
     const region = await RegionModel.findOneAndUpdate(
       { _id: regionId, user: user._id },
@@ -90,8 +91,8 @@ export const findRegion = async (req: Request, resp: Response) => {
       return resp.status(401).json({ error: 'User not found' });
     }
 
-    const latitude = req.body.latitude;
-    const longitude = req.body.longitude;
+    const latitude = Number.parseFloat(req.query.latitude as string);
+    const longitude = Number.parseFloat(req.query.longitude as string);
 
     if (!latitude || !longitude) {
       return resp.status(500).json({ message: 'missing arguments' });
@@ -103,8 +104,8 @@ export const findRegion = async (req: Request, resp: Response) => {
           $geometry: {
             type: 'Point',
             coordinates: [
-              Number.parseFloat(latitude),
-              Number.parseFloat(longitude),
+              latitude,
+              longitude,
             ],
           },
         },
@@ -112,7 +113,7 @@ export const findRegion = async (req: Request, resp: Response) => {
       user: user._id,
     }).lean();
 
-    resp.status(200).json({ regions: regions });
+    resp.status(200).json(regions);
   } catch (error) {
     console.error(error);
     resp.status(500).json({ message: 'Error finding region', error: error });
@@ -126,10 +127,11 @@ export const findRegionNear = async (req: Request, resp: Response) => {
       return resp.status(401).json({ error: 'User not found' });
     }
 
-    const latitude = req.body.latitude;
-    const longitude = req.body.longitude;
-    const distance = req.body.distance || 1000;
-    const searchAll = req.body.searchAll || false;
+    const latitude = Number.parseFloat(req.query.latitude as string);
+    const longitude = Number.parseFloat(req.query.longitude as string);
+    const distanceQuery = req.query.distance;
+      const distance = typeof distanceQuery === 'string' ? Number.parseInt(distanceQuery, 10) : 1000;
+    const searchAll = req.query.searchAll || false;
 
     if (!latitude || !longitude) {
       return resp.status(500).json({ message: 'missing arguments' });
@@ -144,8 +146,8 @@ export const findRegionNear = async (req: Request, resp: Response) => {
           near: {
             type: 'Point',
             coordinates: [
-              Number.parseFloat(latitude),
-              Number.parseFloat(longitude),
+                latitude,
+              longitude,
             ],
           },
           maxDistance: distance,
@@ -157,7 +159,7 @@ export const findRegionNear = async (req: Request, resp: Response) => {
       },
     ]);
 
-    resp.status(200).json({ regions: regions });
+    resp.status(200).json(regions);
   } catch (error) {
     console.error(error);
     resp.status(500).json({ message: 'Error finding region', error: error });

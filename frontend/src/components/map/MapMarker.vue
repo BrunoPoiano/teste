@@ -31,7 +31,10 @@ export default {
     return {
       show: false,
       googleApi: import.meta.env.VITE_GEOCODING_API_KEY,
-      center: <Coordinates>{ lat: 0, lng: 0 },
+      center: <Coordinates>{
+        lat: Number(this.coordinates[0]),
+        lng: Number(this.coordinates[1]),
+      },
       markerOptions: {
         position: <Coordinates>{ lat: this.coordinates[0], lng: this.coordinates[1] },
         label: 'L',
@@ -41,19 +44,16 @@ export default {
   },
   watch: {
     coordinates() {
-      if (this.coordinates.length > 0) {
-        console.log('aqui updates', this.coordinates)
-        const position: Coordinates = {
-          lat: Number(this.coordinates[0]),
-          lng: Number(this.coordinates[1]),
-        }
+      const position: Coordinates = {
+        lat: Number(this.coordinates[0]),
+        lng: Number(this.coordinates[1]),
+      }
 
-        this.center = position
-        this.markerOptions = {
-          position: position,
-          label: 'L',
-          title: 'User',
-        }
+      this.center = position
+      this.markerOptions = {
+        position: position,
+        label: 'L',
+        title: 'User',
       }
     },
   },

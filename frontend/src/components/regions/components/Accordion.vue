@@ -6,9 +6,8 @@
       </summary>
       <div class="details-content-wrapper">
         <Map :region="item" />
-
         <div class="actions">
-          <button data-bg-atention>Editar</button>
+          <RegionsForm action="edit" :content="item" @refreshRegions="$emit('refreshRegions')" />
           <button data-bg-danger @click="DeleteItem(item)">Deletar</button>
         </div>
       </div>
@@ -19,23 +18,26 @@
 <script lang="ts">
 import Map from '../../map/MapPolygon.vue'
 import axiosInstance from '@/axios'
+import RegionsForm from './RegionsForm.vue'
+import type { Region } from '../Index.vue'
 
 export default {
   name: 'AppAccordion',
   components: {
     Map,
+    RegionsForm,
   },
   props: {
     content: {
-      type: Array,
+      type: Array as () => Region[],
       required: true,
     },
   },
   methods: {
-    DeleteItem(item) {
+    DeleteItem(item: Region) {
       axiosInstance
         .delete(`region/${item._id}`)
-        .then(({ data }) => {
+        .then(() => {
           alert('Deletado com sucesso')
           this.$emit('refreshRegions')
         })
@@ -58,7 +60,7 @@ export default {
   details {
     display: flex;
     cursor: pointer;
-    background-color: light-dark(#f5f5f5, #5e5e5e);
+    background-color: light-dark(#f5f5f5, #0000002e);
     border-radius: 0.5rem;
     transition: opacity 0.3s ease-in-out;
 
@@ -75,6 +77,7 @@ export default {
 
     summary {
       padding: 0.8rem 1rem;
+      text-transform: capitalize;
     }
 
     ::marker {

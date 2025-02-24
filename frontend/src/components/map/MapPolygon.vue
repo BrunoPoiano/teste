@@ -41,7 +41,6 @@ export default {
     let lat = 0
     let lgn = 0
     for (const point of this.region.map_coordinated) {
-      console.log('point', point)
       lat += point.lat
       lgn += point.lng
     }
@@ -49,11 +48,7 @@ export default {
     const lngCenter = lgn / this.region.map_coordinated.length
 
     this.center = { lat: latCenter, lng: lngCenter }
-
     this.polygonOptions.paths = this.region.map_coordinated
-
-    console.log({ lat: latCenter, lng: lngCenter })
-    console.log(this.region.map_coordinated)
   },
 }
 </script>

@@ -24,9 +24,9 @@
   --max_width: 1500px;
 
   --success: green;
-  --danger: red;
+  --danger: #ff4545;
   --atention: orange;
-  --default: blue;
+  --default: light-dark(#3a3aff, #3333ac);
 }
 
 html {
@@ -121,9 +121,12 @@ textarea {
   font-size: inherit;
 }
 
-input {
+input,
+select {
   padding: 0.4rem 0.5rem;
   border-radius: 8px;
+  border: none;
+  outline: 1px solid light-dark(#d2d2d2, #4a4a4a);
 }
 
 img {
@@ -142,6 +145,8 @@ button {
 
   padding: 0.5rem 1rem;
   border-radius: 10px;
+  border: none;
+  outline: 1px solid light-dark(#d2d2d2, #4a4a4a);
 }
 
 form {
@@ -167,7 +172,7 @@ form {
   input:disabled,
   textarea:disabled,
   select:disabled {
-    background: #ececec !important;
+    background: light-dark(#ececec, #00000026) !important;
   }
 
   div {
@@ -223,6 +228,11 @@ form {
   --bg: var(--default);
 }
 
+[data-btn-svg] {
+  min-width: fit-content;
+  padding: 5px 8px;
+}
+
 dialog {
   padding: 45px 20px 20px;
   position: relative;
@@ -246,6 +256,7 @@ dialog {
     right: 10px;
     min-width: 50px;
     border: none;
+    outline: none;
 
     display: grid;
     place-items: center;

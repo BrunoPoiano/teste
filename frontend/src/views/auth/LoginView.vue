@@ -64,7 +64,7 @@ const sendForm = async (e: Event) => {
       if (error?.response?.data?.errors) {
         alert(error?.response?.data?.errors[0]?.msg)
       } else {
-        alert('Erro ao criar usuario')
+        alert('Erro ao logar usuario')
       }
     })
     .finally(() => {

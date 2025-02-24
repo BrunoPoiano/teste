@@ -1,43 +1,18 @@
 <template>
   <button id="mode-toggle" @click="changeColorTheme">
     <span id="sun" data-active="false">
-      <svg
-        width="40"
-        height="40"
-        viewBox="0 0 26 26"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M13.0003 2.73726V1.97705M13.0003 24.0231V23.2629M23.2632 13.0001H24.0234M1.97729 13.0001H2.73751M20.2579 5.74327L20.7955 5.20572M5.20516 20.7945L5.74271 20.257M20.2579 20.2569L20.7955 20.7945M5.20516 5.20566L5.74271 5.74321M19.0672 12.9585C19.0672 16.3173 16.3443 19.0402 12.9855 19.0402C9.62667 19.0402 6.90381 16.3173 6.90381 12.9585C6.90381 9.5997 9.62667 6.87684 12.9855 6.87684C16.3443 6.87684 19.0672 9.5997 19.0672 12.9585Z"
-          stroke="black"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
-      </svg>
+      <Sun />
     </span>
 
     <span id="moon" data-active="true">
-      <svg
-        width="40"
-        height="40"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M18.9001 11.7003V8.70034M18.9001 8.70034V5.70034M18.9001 8.70034L21.9001 8.70034M18.9001 8.70034H15.9001M14.1001 5.70034V3.90034M14.1001 3.90034V2.10034M14.1001 3.90034L15.9001 3.90034M14.1001 3.90034L12.3001 3.90034M21.3 14.9398C20.3977 15.2134 19.4404 15.3605 18.4488 15.3605C13.0308 15.3605 8.63863 10.9684 8.63863 5.55037C8.63863 4.55915 8.78564 3.60227 9.05904 2.70034C5.03161 3.92172 2.1001 7.66338 2.1001 12.0897C2.1001 17.5077 6.49226 21.8999 11.9103 21.8999C16.337 21.8999 20.079 18.9678 21.3 14.9398Z"
-          stroke="black"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
+      <Moon />
     </span>
   </button>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import Sun from './svgs/Sun.vue'
+import Moon from './svgs/Moon.vue'
 const colorScheme = ref(localStorage.getItem('theme') || 'dark')
 
 const setColorTheme = () => {
@@ -63,10 +38,11 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style>
 #mode-toggle {
   z-index: 1;
   border: none;
+  outline: none;
   background: transparent;
   overflow: hidden;
 
