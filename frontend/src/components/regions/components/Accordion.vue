@@ -1,9 +1,7 @@
 <template>
   <div class="accordion-wrapper">
     <details name="accordion" :id="`region-${item._id}`" v-for="item in content" :key="item._id">
-      <summary>
-        {{ item.name }}
-      </summary>
+      <summary>{{ item.name }} {{ regionOwner(item) }}</summary>
       <div class="details-content-wrapper">
         <Map :region="item" />
         <div class="actions">
@@ -34,6 +32,16 @@ export default {
     },
   },
   methods: {
+    regionOwner(item: Region) {
+      if (item.userDetails) {
+        const user = JSON.parse(localStorage.getItem('USER_DATA') || '{}')
+        if (user._id !== item.userDetails?.[0]?._id) {
+          return ` - ${item.userDetails?.[0]?.name}`
+        }
+      }
+
+      return ''
+    },
     DeleteItem(item: Region) {
       axiosInstance
         .delete(`region/${item._id}`)

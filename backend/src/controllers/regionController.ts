@@ -1,6 +1,6 @@
 /// <reference path="../types/express.d.ts" />
 import { Request, Response } from 'express';
-import { RegionModel } from '../models';
+import { RegionModel, UserModel } from '../models';
 
 export const getRegion = async (req: Request, resp: Response) => {
   try {
@@ -131,14 +131,15 @@ export const findRegionNear = async (req: Request, resp: Response) => {
     const longitude = Number.parseFloat(req.query.longitude as string);
     const distanceQuery = req.query.distance;
       const distance = typeof distanceQuery === 'string' ? Number.parseInt(distanceQuery, 10) : 1000;
-    const searchAll = req.query.searchAll || false;
+    const searchAll = req.query.searchAll || "false";
 
     if (!latitude || !longitude) {
       return resp.status(500).json({ message: 'missing arguments' });
     }
 
     let query = {};
-    if (!searchAll) query = { user: user._id };
+    if (searchAll === "false")       query = { user: user._id }
+
 
     const regions = await RegionModel.aggregate([
       {
@@ -157,6 +158,14 @@ export const findRegionNear = async (req: Request, resp: Response) => {
           query: query,
         },
       },
+        {
+                $lookup: {
+                  from: 'users',
+                  localField: 'user',
+                  foreignField: '_id',
+                  as: 'userDetails',
+                },
+              },
     ]);
 
     resp.status(200).json(regions);

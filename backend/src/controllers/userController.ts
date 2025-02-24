@@ -21,7 +21,7 @@ export const createTesteUser = async (req: Request, resp: Response) => {
 
     return resp.status(201).json({ message: 'User created', user: newUser });
   } catch (err) {
-    console.error('error adding user:', err);
+    console.error('error creating user:', err);
     return resp
       .status(400)
       .json({ error: 'Failed to create user', details: err });
@@ -75,7 +75,7 @@ export const updateUser = async (req: Request, resp: Response) => {
   } catch (err) {
     return resp
       .status(500)
-      .json({ error: 'Failed to update user', details: err });
+      .json({ error: 'error updating user', details: err });
   }
 };
 
@@ -90,7 +90,7 @@ export const deleteUser = async (req: Request, resp: Response) => {
 
     return resp.status(200).json({ message: 'User deleted' });
   } catch (err) {
-    console.error(err);
+    console.error("Error deleting user:", err);
     return resp.status(500).json(err);
   }
 };
@@ -103,7 +103,7 @@ export const loggedUser = async (req: Request, resp: Response) => {
     }
     return resp.status(200).json(user);
   } catch (err) {
-    console.error(err);
+    console.error("Error getting logged user:", err);
     return resp.status(500).json(err);
   }
 };

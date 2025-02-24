@@ -51,6 +51,16 @@
           :onkeyup="getRegions"
         />
       </div>
+      <div v-if="filter.search_type === 'point_near'">
+        <label for="">Todas as regiões</label>
+        <input
+          type="checkbox"
+          placeholder="searchAll"
+          v-model="filter.searchAll"
+          :checked="filter.searchAll"
+          :onchange="getRegions"
+        />
+      </div>
       <button type="button" @click="clearFilter">Limpar Filtro</button>
     </div>
     <Accordion :content="regions" @refreshRegions="getRegions" />
@@ -67,6 +77,7 @@ export type Region = {
   _id: string
   name: string
   geojson: GeoJson
+  userDetails?: { _id: string; name: string }[]
 }
 type GeoJson = {
   type: string
@@ -81,6 +92,7 @@ const filter = ref({
   latitude: null,
   longitude: null,
   distance: 1000,
+  searchAll: false,
 })
 const regions = ref<Region[]>([])
 
@@ -144,6 +156,7 @@ const clearFilter = () => {
     latitude: null,
     longitude: null,
     distance: 1000,
+    searchAll: false,
   }
 }
 

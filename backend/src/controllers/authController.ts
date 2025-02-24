@@ -36,7 +36,7 @@ export const createUser = async (req: Request, resp: Response) => {
 
     return resp.status(201).json({ message: 'User created', user: newUser });
   } catch (err) {
-    console.error('❌ Error adding user:', err);
+    console.error('Error creating user:', err);
     return resp
       .status(500)
       .json({ error: 'Failed to create user', details: err });
@@ -63,5 +63,10 @@ export const login = async (req: Request, resp: Response) => {
 
     const token = generateToken(user);
     resp.status(200).json({ token: token, user: user });
-  } catch (error) {}
+  } catch (error) {
+    console.error('Error logging user:', error);
+    return resp
+      .status(500)
+      .json({ error: 'Failed to lo user', details: error });
+  }
 };

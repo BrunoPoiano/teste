@@ -1,8 +1,8 @@
 <template>
   <nav v-if="is_loged">
     <div>
-      <RouterLink to="/">Dashboard</RouterLink>
-      <RouterLink to="/profile">Perfil</RouterLink>
+      <RouterLink class="router-link" to="/">Dashboard</RouterLink>
+      <RouterLink class="router-link" to="/profile">Perfil</RouterLink>
     </div>
     <div>
       <ColorScheme />
@@ -54,6 +54,20 @@ nav {
     flex-wrap: wrap;
     gap: 0.5rem;
     width: fit-content;
+
+    .router-link {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 300ms ease;
+      font-weight: bolder;
+      color: inherit;
+      &:hover {
+        background-color: var(--default);
+        color: white;
+      }
+    }
+
     &:nth-child(2) {
       width: 300px;
       justify-content: flex-end;
